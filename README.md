@@ -1,13 +1,13 @@
 # Laravel Installer
 
-[![Latest Stable Version](https://poser.pugx.org/jmrashed/laravel-installer/v/stable)](https://packagist.org/packages/jmrashed/laravel-installer)
-[![Total Downloads](https://poser.pugx.org/jmrashed/laravel-installer/downloads)](https://packagist.org/packages/jmrashed/laravel-installer)
-[![Monthly Downloads](https://poser.pugx.org/jmrashed/laravel-installer/d/monthly)](https://packagist.org/packages/jmrashed/laravel-installer)
-[![License](https://poser.pugx.org/jmrashed/laravel-installer/license)](https://packagist.org/packages/jmrashed/laravel-installer)
-[![Stars](https://img.shields.io/github/stars/jmrashed/laravel-installer.svg?style=social&label=Stars)](https://github.com/jmrashed/laravel-installer)
+[![Latest Stable Version](https://poser.pugx.org/jmrashed/laravel-installer/v/stable)](https://packagist.org/packages/jmrashed/laravel-installer)  
+[![Total Downloads](https://poser.pugx.org/jmrashed/laravel-installer/downloads)](https://packagist.org/packages/jmrashed/laravel-installer)  
+[![Monthly Downloads](https://poser.pugx.org/jmrashed/laravel-installer/d/monthly)](https://packagist.org/packages/jmrashed/laravel-installer)  
+[![License](https://poser.pugx.org/jmrashed/laravel-installer/license)](https://packagist.org/packages/jmrashed/laravel-installer)  
+[![Stars](https://img.shields.io/github/stars/jmrashed/laravel-installer.svg?style=social&label=Stars)](https://github.com/jmrashed/laravel-installer)  
 [![Forks](https://img.shields.io/github/forks/jmrashed/laravel-installer.svg?style=social&label=Forks)](https://github.com/jmrashed/laravel-installer)
 
-**Laravel Installer** is a comprehensive installation package designed to streamline the process of setting up your Laravel project, handling everything from environment configuration to database migration and purchase code validation.
+**Laravel Installer** is a complete package designed to simplify the installation process for Laravel projects. This installer handles system requirement checks, environment configuration, database setup, and purchase code validation.
 
 ---
 
@@ -22,127 +22,115 @@
 
 ## 🌟 Features
 
-- **System Requirements Check**: Verifies PHP version and required extensions before proceeding with the installation.
-- **Environment File Setup**: Automatically creates and configures the `.env` file with your database credentials and other necessary settings.
-- **Database Configuration**: Offers options to either run migrations and seeders or import an SQL dump to set up the database.
-- **Purchase Code Validation**: Integrated validation logic for license or purchase code verification.
-- **User-Friendly Interface**: Provides a simple, step-by-step guided installer with a welcome screen and status updates.
+- **System Requirements Check**: Automatically verifies PHP version and required extensions.
+- **Environment File Setup**: Helps create and configure the `.env` file.
+- **Database Configuration**: Offers the option to run migrations, seeders, or import an SQL dump.
+- **Purchase Code Validation**: Built-in validation for purchase codes.
+- **User-Friendly Interface**: A guided step-by-step installation process with a simple interface.
+
+---
 
 ## 🛠️ Installation
 
-Install the package via Composer:
+To install the package, run the following command:
 
 ```bash
 composer require jmrashed/laravel-installer
 ```
 
-After installation, publish the configuration file:
+Then, publish the configuration file:
 
 ```bash
 php artisan vendor:publish --tag=installer-config
 ```
 
+---
+
 ## 🚀 How to Use
 
-To run the installer, simply execute:
+After installation, run the installer using:
 
 ```bash
 php artisan installer:run
 ```
 
-The installer will guide you through the following steps:
+The installer will guide you through these steps:
 
-1. **System Requirements Check**: Ensures your PHP version and necessary extensions are installed.
-2. **Create `.env` File**: Prompts for database details and automatically creates the `.env` file.
-3. **Database Setup**: Choose between running database migrations and seeders or importing a SQL dump.
+1. **System Requirements Check**: Ensures the necessary PHP version and extensions are installed.
+2. **Environment File Setup**: Prompts for database credentials and generates the `.env` file.
+3. **Database Setup**: Choose to run migrations and seeders or import a SQL dump.
 4. **Purchase Code Validation**: If enabled, the user is required to enter their purchase code.
-5. **Installation Completion**: Displays a success message and other helpful information.
+5. **Completion**: Confirms successful installation.
 
-### Manual Commands
+---
 
-- Run migrations and seeders manually:
+## 📂 Directory Structure
 
-  ```bash
-  php artisan migrate --seed
-  ```
+Here’s a simplified structure of the project directories and key files:
 
-- Import an SQL dump file directly:
-
-  ```bash
-  php artisan installer:import-sql /path/to/dump.sql
-  ```
-
-
-# Directory structure of: .
-- 📁 **src/**
-   - 📁 **Config/**
+```text
+- 📁 src/
+   - 📁 Config/
       - 📄 installer.php
-   - 📁 **Controllers/**
+   - 📁 Controllers/
       - 📄 DatabaseController.php
       - 📄 EnvironmentController.php
-   - 📁 **Events/**
+   - 📁 Events/
       - 📄 EnvironmentSaved.php
       - 📄 LaravelInstallerFinished.php
-   - 📁 **Helpers/**
+   - 📁 Helpers/
       - 📄 DatabaseManager.php
       - 📄 EnvironmentManager.php
-   - 📁 **Middleware/**
+   - 📁 Middleware/
       - 📄 canInstall.php
       - 📄 canUpdate.php
-   - 📁 **Providers/**
+   - 📁 Providers/
       - 📄 LaravelInstallerServiceProvider.php
-   - 📁 **Routes/**
+   - 📁 Routes/
       - 📄 web.php
-   - 📁 **Views/**
-      - 📁 **layouts/**
+   - 📁 Views/
+      - 📁 layouts/
          - 📄 master-update.blade.php
          - 📄 master.blade.php
-      - 📁 **update/**
+      - 📁 update/
          - 📄 finished.blade.php
          - 📄 overview.blade.php
       - 📄 environment-classic.blade.php
       - 📄 environment-wizard.blade.php
-   - 📁 **assets/**
-      - 📁 **css/**
-         - 📁 **sass/**
-            - 📄 _variables.sass
-            - 📄 style.sass
-         - 📁 **scss/**
-            - 📁 **font-awesome/**
-               - 📄 _animated.scss
-               - 📄 _bordered-pulled.scss
-            - 📄 _variables.scss
-            - 📄 style.scss
+   - 📁 assets/
+      - 📁 css/
          - 📄 style.css
          - 📄 style.css.map
-      - 📁 **fonts/**
+      - 📁 fonts/
          - 📄 FontAwesome.otf
          - 📄 fontawesome-webfont.eot
-      - 📁 **img/**
-         - 📁 **favicon/**
+      - 📁 img/
+         - 📁 favicon/
             - 📄 favicon-16x16.png
             - 📄 favicon-32x32.png
          - 📄 background.png
          - 📄 pattern.png
 - 📄 LICENSE
 - 📄 README.md
+```
 
-
-
+---
 
 ## ⚙️ Configuration
 
-Once published, the configuration file can be found at:
+The published configuration file can be found at:
 
 ```
 config/installer.php
 ```
 
-Here you can customize the installer behavior, such as adding custom checks or configuring the SQL import path.
+This allows you to customize checks and paths, such as setting the SQL dump path for import during installation.
+
+---
 
 ## 📥 Purchase Code Validation
 
-If you are using a purchase code validation system, the installer will prompt users to provide their code. You can modify the validation logic based on your licensing system:
+If your system requires purchase code validation, you can customize the validation logic in the `validatePurchaseCode` function. Here’s an example:
 
 ```php
 if (!$this->validatePurchaseCode($code)) {
@@ -150,21 +138,23 @@ if (!$this->validatePurchaseCode($code)) {
 }
 ```
 
+---
+
 ## 📷 Screenshots
 
-Here are some screenshots of the installer process:
-
-| **Welcome Screen** | **Database Setup** | **Purchase Code Validation** |
-|--------------------|--------------------|------------------------------|
+| **Welcome Screen**         | **Database Setup**           | **Purchase Code Validation** |
+|----------------------------|------------------------------|------------------------------|
 | ![Welcome](path_to_screenshot) | ![DB Setup](path_to_screenshot) | ![Purchase Code](path_to_screenshot) |
+
+---
 
 ## 🔧 System Requirements
 
-To ensure the package works as expected, ensure your environment meets these requirements:
+To ensure the Laravel Installer works as expected, your environment must meet the following requirements:
 
 - **PHP**: 8.0 or higher
 - **Laravel**: 9.0 or higher
-- **PHP Extensions**: 
+- **PHP Extensions**:
   - `mbstring`
   - `openssl`
   - `pdo`
@@ -173,20 +163,27 @@ To ensure the package works as expected, ensure your environment meets these req
   - `ctype`
   - `json`
 
+---
+
 ## 🤝 Contributing
 
-We welcome contributions! Feel free to fork the repository and submit pull requests. To contribute:
+Contributions are welcome! If you want to contribute:
 
-1. Fork the project.
-2. Create a new branch for your feature: `git checkout -b feature-branch`.
-3. Commit your changes: `git commit -m 'Add feature'`.
-4. Push the changes: `git push origin feature-branch`.
-5. Submit a pull request.
+1. Fork the repository.
+2. Create a new feature branch: `git checkout -b feature-branch`.
+3. Commit your changes: `git commit -m 'Add new feature'`.
+4. Push to the branch: `git push origin feature-branch`.
+5. Open a pull request on GitHub.
+
+---
 
 ## 📝 License
 
-This package is open-sourced software licensed under the [MIT license](LICENSE.md).
+This package is licensed under the [MIT license](LICENSE.md).
+
+---
 
 ## 📬 Support
 
-If you encounter any issues or have questions, feel free to open an issue on the [GitHub repository](https://github.com/jmrashed/laravel-installer/issues) or reach out directly.
+For support, feel free to open an issue on the [GitHub repository](https://github.com/jmrashed/laravel-installer/issues) or contact us directly.
+ 
