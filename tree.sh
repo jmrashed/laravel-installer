@@ -1,14 +1,14 @@
 #!/bin/sh
 
-# Function to print tree structure to output.md
+# Function to print tree structure to output.md, skipping "Lang" directory
 print_tree() {
     local indent="$2"
     local dir="$1"
 
     # List directories in the given directory
     for entry in "$dir"/*; do
-        if [ -d "$entry" ]; then
-            # If it's a directory, print it and recursively call the function
+        if [ -d "$entry" ] && [ "$(basename "$entry")" != "Lang" ]; then
+            # If it's a directory and not "Lang", print it and recursively call the function
             echo "${indent}- 📁 **$(basename "$entry")/**" >> output.md
             print_tree "$entry" "   $indent"
         fi

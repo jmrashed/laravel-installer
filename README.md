@@ -73,8 +73,7 @@ The installer will guide you through the following steps:
   ```
 
 
-
-  # Directory structure of: .
+# Directory structure of: .
 - 📁 **src/**
    - 📁 **Config/**
       - 📄 installer.php
@@ -87,47 +86,6 @@ The installer will guide you through the following steps:
    - 📁 **Helpers/**
       - 📄 DatabaseManager.php
       - 📄 EnvironmentManager.php
-   - 📁 **Lang/**
-      - 📁 **ar/**
-         - 📄 installer_messages.php
-      - 📁 **de/**
-         - 📄 installer_messages.php
-      - 📁 **en/**
-         - 📄 installer_messages.php
-      - 📁 **es/**
-         - 📄 installer_messages.php
-      - 📁 **et/**
-         - 📄 installer_messages.php
-      - 📁 **fa/**
-         - 📄 installer_messages.php
-      - 📁 **fr/**
-         - 📄 installer_messages.php
-      - 📁 **gr/**
-         - 📄 installer_messages.php
-      - 📁 **id/**
-         - 📄 installer_messages.php
-      - 📁 **it/**
-         - 📄 installer_messages.php
-      - 📁 **nl/**
-         - 📄 installer_messages.php
-      - 📁 **pl/**
-         - 📄 installer_messages.php
-      - 📁 **pt/**
-         - 📄 installer_messages.php
-      - 📁 **pt-br/**
-         - 📄 installer_messages.php
-      - 📁 **ro/**
-         - 📄 installer_messages.php
-      - 📁 **ru/**
-         - 📄 installer_messages.php
-      - 📁 **th/**
-         - 📄 installer_messages.php
-      - 📁 **tr/**
-         - 📄 installer_messages.php
-      - 📁 **zh-CN/**
-         - 📄 installer_messages.php
-      - 📁 **zh-TW/**
-         - 📄 installer_messages.php
    - 📁 **Middleware/**
       - 📄 canInstall.php
       - 📄 canUpdate.php
@@ -168,6 +126,7 @@ The installer will guide you through the following steps:
          - 📄 pattern.png
 - 📄 LICENSE
 - 📄 README.md
+
 
 
 
