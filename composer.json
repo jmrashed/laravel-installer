@@ -1,13 +1,28 @@
 {
     "name": "jmrashed/laravel-installer",
-    "description": "Laravel web installer",
+    "description": "A complete web installer for Laravel applications, making the setup process simple and user-friendly.",
     "license": "MIT",
     "authors": [
         {
             "name": "Rashed Zaman",
-            "email": "jmrashed@gmail.com"
+            "email": "jmrashed@gmail.com",
+            "homepage": "https://github.com/jmrashed",
+            "role": "Developer"
         }
     ],
+    "keywords": [
+        "laravel", 
+        "installer", 
+        "web installer", 
+        "laravel setup", 
+        "laravel installation", 
+        "laravel package"
+    ],
+    "homepage": "https://github.com/jmrashed/laravel-installer",
+    "support": {
+        "issues": "https://github.com/jmrashed/laravel-installer/issues",
+        "source": "https://github.com/jmrashed/laravel-installer"
+    },
     "require": {
         "php": ">=7.0.0"
     },
@@ -27,7 +42,12 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "preferred-install": "dist"
     },
-    "minimum-stability": "stable"
+    "suggest": {
+        "jmrashed/laravel-core-application-service": "To extend functionality with core application services."
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
