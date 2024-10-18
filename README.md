@@ -72,6 +72,105 @@ The installer will guide you through the following steps:
   php artisan installer:import-sql /path/to/dump.sql
   ```
 
+
+
+  # Directory structure of: .
+- 📁 **src/**
+   - 📁 **Config/**
+      - 📄 installer.php
+   - 📁 **Controllers/**
+      - 📄 DatabaseController.php
+      - 📄 EnvironmentController.php
+   - 📁 **Events/**
+      - 📄 EnvironmentSaved.php
+      - 📄 LaravelInstallerFinished.php
+   - 📁 **Helpers/**
+      - 📄 DatabaseManager.php
+      - 📄 EnvironmentManager.php
+   - 📁 **Lang/**
+      - 📁 **ar/**
+         - 📄 installer_messages.php
+      - 📁 **de/**
+         - 📄 installer_messages.php
+      - 📁 **en/**
+         - 📄 installer_messages.php
+      - 📁 **es/**
+         - 📄 installer_messages.php
+      - 📁 **et/**
+         - 📄 installer_messages.php
+      - 📁 **fa/**
+         - 📄 installer_messages.php
+      - 📁 **fr/**
+         - 📄 installer_messages.php
+      - 📁 **gr/**
+         - 📄 installer_messages.php
+      - 📁 **id/**
+         - 📄 installer_messages.php
+      - 📁 **it/**
+         - 📄 installer_messages.php
+      - 📁 **nl/**
+         - 📄 installer_messages.php
+      - 📁 **pl/**
+         - 📄 installer_messages.php
+      - 📁 **pt/**
+         - 📄 installer_messages.php
+      - 📁 **pt-br/**
+         - 📄 installer_messages.php
+      - 📁 **ro/**
+         - 📄 installer_messages.php
+      - 📁 **ru/**
+         - 📄 installer_messages.php
+      - 📁 **th/**
+         - 📄 installer_messages.php
+      - 📁 **tr/**
+         - 📄 installer_messages.php
+      - 📁 **zh-CN/**
+         - 📄 installer_messages.php
+      - 📁 **zh-TW/**
+         - 📄 installer_messages.php
+   - 📁 **Middleware/**
+      - 📄 canInstall.php
+      - 📄 canUpdate.php
+   - 📁 **Providers/**
+      - 📄 LaravelInstallerServiceProvider.php
+   - 📁 **Routes/**
+      - 📄 web.php
+   - 📁 **Views/**
+      - 📁 **layouts/**
+         - 📄 master-update.blade.php
+         - 📄 master.blade.php
+      - 📁 **update/**
+         - 📄 finished.blade.php
+         - 📄 overview.blade.php
+      - 📄 environment-classic.blade.php
+      - 📄 environment-wizard.blade.php
+   - 📁 **assets/**
+      - 📁 **css/**
+         - 📁 **sass/**
+            - 📄 _variables.sass
+            - 📄 style.sass
+         - 📁 **scss/**
+            - 📁 **font-awesome/**
+               - 📄 _animated.scss
+               - 📄 _bordered-pulled.scss
+            - 📄 _variables.scss
+            - 📄 style.scss
+         - 📄 style.css
+         - 📄 style.css.map
+      - 📁 **fonts/**
+         - 📄 FontAwesome.otf
+         - 📄 fontawesome-webfont.eot
+      - 📁 **img/**
+         - 📁 **favicon/**
+            - 📄 favicon-16x16.png
+            - 📄 favicon-32x32.png
+         - 📄 background.png
+         - 📄 pattern.png
+- 📄 LICENSE
+- 📄 README.md
+
+
+
 ## ⚙️ Configuration
 
 Once published, the configuration file can be found at:
