@@ -36,6 +36,7 @@ composer require jmrashed/laravel-installer
 Then, publish the configuration file:
 
 ```bash
+php artisan vendor:publish --provider="Jmrashed\LaravelInstaller\Providers\LaravelInstallerServiceProvider"
 php artisan vendor:publish --tag=installer-config
 ```
 
