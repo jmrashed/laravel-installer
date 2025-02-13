@@ -11,8 +11,25 @@ return [
     'next' => 'Next Step',
     'back' => 'Previous',
     'finish' => 'Install',
+    'installation' => 'Installation',
+    'version' => 'version',
+    'required' => 'required',
     'forms' => [
         'errorTitle' => 'The Following errors occurred:',
+    ],
+
+    /*
+     *
+     * menus translations.
+     *
+     */
+    'menus' => [
+        'title' => 'INSTALLER',
+        'purchaseValidation' => 'Purchase Validation',
+        'serverRequirements' => 'Server Requirements',
+        'permissions' => 'Permissions',
+        'environmentSettings' => 'Environment Settings',
+        'installationFinished' => 'Installation Finished',
     ],
 
     /*
@@ -24,18 +41,53 @@ return [
         'templateTitle' => 'Welcome',
         'title'   => 'Laravel Installer',
         'message' => 'Easy Installation and Setup Wizard.',
-        'next'    => 'Check Requirements',
+        'next'    => 'Start Installing',
     ],
 
     /*
      *
-     * Requirements page translations.
+     * Start & Installing translations.
      *
      */
-    'requirements' => [
-        'templateTitle' => 'Step 1 | Server Requirements',
-        'title' => 'Server Requirements',
-        'next'    => 'Check Permissions',
+    'startInstalling' => [
+        'templateTitle' => 'Start & Installing',
+        'title'   => 'Start & Installing | Laravel Installer',
+        'message' => 'Easy Installation and Setup Wizard.',
+        'next'    => 'Next & Install',
+    ],
+
+    /*
+     *
+     * Purchase Validation translations.
+     *
+     */
+    'purchaseValidation' => [
+        'templateTitle' => 'Purchase Validation',
+        'title'   => 'Purchase Validation | Laravel Installer',
+        'message' => 'Validate Purchase Key',
+        'previous'=> 'Welcome',
+        'next'    => 'Server Requirements',
+        'form' => [
+            'purchaseCodeLabel' => 'Purchase Code',
+            'domainLabel' => 'Domain',
+            'emailLabel' => 'Email',
+            'purchaseCodePlaceholder' => 'xxxxxx-xxxx-xxxx-xxxx-xxxxxx',
+            'domainPlaceholder' => 'example.com',
+            'emailPlaceholder' => 'test@example.com',
+        ]
+    ],
+
+    /*
+     *
+     * Server Requirements translations.
+     *
+     */
+    'serverRequirements' => [
+        'templateTitle' => 'Server Requirements',
+        'title'   => 'Server Requirements | Laravel Installer',
+        'message' => 'Server Requirements',
+        'previous'=> 'Purchase Validation',
+        'next'    => 'Permissions'
     ],
 
     /*
@@ -44,9 +96,88 @@ return [
      *
      */
     'permissions' => [
-        'templateTitle' => 'Step 2 | Permissions',
-        'title' => 'Permissions',
-        'next' => 'Configure Environment',
+        'templateTitle' => 'Permissions',
+        'title'   => 'Permissions | Laravel Installer',
+        'message' => 'Permissions',
+        'previous'=> 'Server Requirements',
+        'next'    => 'Environment Settings'
+    ],
+
+    /*
+     *
+     * Environment Settings page translations.
+     *
+     */
+    'environmentSettings' => [
+        'templateTitle'     => 'Environment Settings',
+        'title'             => 'Environment Settings | Laravel Installer',
+        'message'           => 'Environment Settings',
+        'formWizardSetup'   => 'Form Wizard Setup',
+        'classicTextEditor' => 'Classic Text Editor'
+    ],
+
+    /*
+     *
+     * Configuration Setting page translations.
+     *
+     */
+    'configurationSetting' => [
+        'templateTitle' => 'Configuration Setting',
+        'title'         => 'Configuration Setting | Laravel Installer',
+        'message'       => 'Configuration Setting',
+        'previous'      => 'Environment Settings',
+        'next'          => 'Database Setting'
+    ],
+
+    /*
+     *
+     * Database Setting page translations.
+     *
+     */
+    'databaseSetting' => [
+        'templateTitle' => 'Database Setting',
+        'title'         => 'Database Setting | Laravel Installer',
+        'message'       => 'Database Setting',
+        'previous'      => 'Configuration Setting',
+        'next'          => 'Application Setting'
+    ],
+
+    /*
+     *
+     * Application Setting page translations.
+     *
+     */
+    'applicationSetting' => [
+        'templateTitle' => 'Application Setting',
+        'title'         => 'Application Setting | Laravel Installer',
+        'message'       => 'Application Setting',
+        'previous'      => 'Database Setting',
+        'next'          => 'Finish'
+    ],
+
+    /*
+     *
+     * Classic Text Editor page translations.
+     *
+     */
+    'classicTextEditor' => [
+        'templateTitle' => 'Classic Text Editor',
+        'title'         => 'Classic Text Editor | Laravel Installer',
+        'message'       => 'Classic Text Editor',
+        'previous'      => 'Environment Settings',
+        'next'          => 'Finish'
+    ],
+
+    /*
+     *
+     * Installation Finished page translations.
+     *
+     */
+    'installationFinished' => [
+        'templateTitle' => 'Installation Finished',
+        'title'         => 'Installation Finished | Laravel Installer',
+        'message'       => 'Installation Process Finished Successfully',
+        'next'          => 'Go to Home'
     ],
 
     /*
@@ -114,23 +245,23 @@ return [
 
                 'app_tabs' => [
                     'more_info' => 'More Info',
-                    'broadcasting_title' => 'Broadcasting, Caching, Session, &amp; Queue',
+                    'broadcasting_title' => 'Broadcasting, Caching, Session, & Queue',
                     'broadcasting_label' => 'Broadcast Driver',
                     'broadcasting_placeholder' => 'Broadcast Driver',
                     'cache_label' => 'Cache Driver',
                     'cache_placeholder' => 'Cache Driver',
                     'session_label' => 'Session Driver',
                     'session_placeholder' => 'Session Driver',
-                    'queue_label' => 'Queue Driver',
-                    'queue_placeholder' => 'Queue Driver',
+                    'queue_label' => 'Queue Connection',
+                    'queue_placeholder' => 'Queue Connection',
                     'redis_label' => 'Redis Driver',
                     'redis_host' => 'Redis Host',
                     'redis_password' => 'Redis Password',
                     'redis_port' => 'Redis Port',
 
                     'mail_label' => 'Mail',
-                    'mail_driver_label' => 'Mail Driver',
-                    'mail_driver_placeholder' => 'Mail Driver',
+                    'mail_mailer_label' => 'Mail Mailer',
+                    'mail_mailer_placeholder' => 'Mail Mailer',
                     'mail_host_label' => 'Mail Host',
                     'mail_host_placeholder' => 'Mail Host',
                     'mail_port_label' => 'Mail Port',
@@ -141,6 +272,10 @@ return [
                     'mail_password_placeholder' => 'Mail Password',
                     'mail_encryption_label' => 'Mail Encryption',
                     'mail_encryption_placeholder' => 'Mail Encryption',
+                    'mail_from_address_label' => 'Mail From Address',
+                    'mail_from_address_placeholder' => 'Mail From Address',
+                    'mail_from_name_label' => 'Mail From Name',
+                    'mail_from_name_placeholder' => 'Mail From Name',
 
                     'pusher_label' => 'Pusher',
                     'pusher_app_id_label' => 'Pusher App Id',

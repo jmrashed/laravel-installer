@@ -13,7 +13,7 @@ return [
     |
     */
     'core' => [
-        'minPhpVersion' => '7.0.0',
+        'minPhpVersion' => '8.1',
     ],
     'final' => [
         'key' => true,
@@ -59,32 +59,38 @@ return [
     */
     'environment' => [
         'form' => [
-            'rules' => [
+            'configuration_rules' => [
                 'app_name'              => 'required|string|max:50',
                 'environment'           => 'required|string|max:50',
                 'environment_custom'    => 'required_if:environment,other|max:50',
                 'app_debug'             => 'required|string',
                 'app_log_level'         => 'required|string|max:50',
                 'app_url'               => 'required|url',
+            ],
+            'database_rules' => [
                 'database_connection'   => 'required|string|max:50',
                 'database_hostname'     => 'required|string|max:50',
                 'database_port'         => 'required|numeric',
                 'database_name'         => 'required|string|max:50',
                 'database_username'     => 'required|string|max:50',
                 'database_password'     => 'nullable|string|max:50',
+            ],
+            'application_rules' => [
                 'broadcast_driver'      => 'required|string|max:50',
                 'cache_driver'          => 'required|string|max:50',
                 'session_driver'        => 'required|string|max:50',
-                'queue_driver'          => 'required|string|max:50',
-                'redis_hostname'        => 'required|string|max:50',
-                'redis_password'        => 'required|string|max:50',
-                'redis_port'            => 'required|numeric',
-                'mail_driver'           => 'required|string|max:50',
+                'queue_connection'      => 'required|string|max:50',
+                'redis_hostname'        => 'nullable|string|max:50',
+                'redis_password'        => 'nullable|string|max:50',
+                'redis_port'            => 'nullable|numeric',
+                'mail_mailer'           => 'required|string|max:50',
                 'mail_host'             => 'required|string|max:50',
                 'mail_port'             => 'required|string|max:50',
                 'mail_username'         => 'required|string|max:50',
                 'mail_password'         => 'required|string|max:50',
                 'mail_encryption'       => 'required|string|max:50',
+                'mail_from_address'     => 'required|string|max:50',
+                'mail_from_name'        => 'required|string|max:50',
                 'pusher_app_id'         => 'max:50',
                 'pusher_app_key'        => 'max:50',
                 'pusher_app_secret'     => 'max:50',

@@ -182,8 +182,3 @@ This package is licensed under the [MIT license](LICENSE.md).
 
 For support, feel free to open an issue on the [GitHub repository](https://github.com/jmrashed/laravel-installer/issues) or contact us directly.
  
-
-
-
-### Click the Image Below for Documentation
-[![Documentation Image](./documentation.png)](DOCUMENTATION.md)
