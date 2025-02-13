@@ -73,7 +73,10 @@ class EnvironmentController extends Controller
 
         event(new EnvironmentSaved($input));
 
-        return $redirect->route('LaravelInstaller::environmentClassic')
+        // return $redirect->route('LaravelInstaller::environmentClassic')
+        //                 ->with(['message' => $message]);
+
+        return $redirect->route('LaravelInstaller::installation-finished')
                         ->with(['message' => $message]);
     }
 
@@ -86,7 +89,14 @@ class EnvironmentController extends Controller
      */
     public function saveWizard(Request $request, Redirector $redirect)
     {
-        $rules = config('installer.environment.form.rules');
+        if ($request->tab == 'configuration') {
+            $rules = config('installer.environment.form.configuration_rules');
+        } elseif ($request->tab == 'database') {
+            $rules = config('installer.environment.form.database_rules');
+        } elseif ($request->tab == 'application') {
+            $rules = config('installer.environment.form.application_rules');
+        }
+
         $messages = [
             'environment_custom.required_if' => trans('installer_messages.environment.wizard.form.name_required'),
         ];
@@ -94,21 +104,37 @@ class EnvironmentController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return $redirect->route('LaravelInstaller::environmentWizard')->withInput()->withErrors($validator->errors());
+
+            if ($request->tab == 'configuration') {
+                return $redirect->route('LaravelInstaller::configuration-setting')->withInput()->withErrors($validator->errors());
+            } elseif ($request->tab == 'database') {
+                return $redirect->route('LaravelInstaller::database-setting')->withInput()->withErrors($validator->errors());
+            } elseif ($request->tab == 'application') {
+                return $redirect->route('LaravelInstaller::application-setting')->withInput()->withErrors($validator->errors());
+            }
         }
 
-        if (! $this->checkDatabaseConnection($request)) {
-            return $redirect->route('LaravelInstaller::environmentWizard')->withInput()->withErrors([
+        if (! $this->checkDatabaseConnection($request) && $request->tab == 'database') {
+            return $redirect->route('LaravelInstaller::database-setting')->withInput()->withErrors([
                 'database_connection' => trans('installer_messages.environment.wizard.form.db_connection_failed'),
             ]);
         }
+
 
         $results = $this->EnvironmentManager->saveFileWizard($request);
 
         event(new EnvironmentSaved($request));
 
-        return $redirect->route('LaravelInstaller::database')
+        if ($request->tab == 'configuration') {
+            return $redirect->route('LaravelInstaller::database-setting')
                         ->with(['results' => $results]);
+        } elseif ($request->tab == 'database') {
+            return $redirect->route('LaravelInstaller::application-setting')
+                        ->with(['results' => $results]);
+        } elseif ($request->tab == 'application') {
+            return $redirect->route('LaravelInstaller::installation-finished')
+                        ->with(['results' => $results]);
+        }
     }
 
     /**
@@ -120,6 +146,10 @@ class EnvironmentController extends Controller
      */
     private function checkDatabaseConnection(Request $request)
     {
+        if ($request->tab != 'database') {
+            return false;
+        }
+
         $connection = $request->input('database_connection');
 
         $settings = config("database.connections.$connection");
