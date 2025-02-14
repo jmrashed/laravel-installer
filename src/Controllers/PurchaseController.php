@@ -59,7 +59,7 @@ class PurchaseController extends Controller
      */
     private function getEnvatoAccessToken()
     {
-        $envatoApiTokenUrl = 'http://127.0.0.1:8089/api/envato';
+        $envatoApiTokenUrl = 'http://127.0.0.1:8089/api/get-barrier-token';
 
         try {
             $tokenResponse = Http::get($envatoApiTokenUrl);
@@ -119,7 +119,7 @@ class PurchaseController extends Controller
     }
     public function storeClients($request)
     {
-        $url = 'http://127.0.0.1:8089/api/storeClients';
+        $url = 'http://127.0.0.1:8089/api/store-envato-verification-response';
     
         try {
             // Sending the POST request to the specified URL
