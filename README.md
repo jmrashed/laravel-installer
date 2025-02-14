@@ -92,32 +92,32 @@ To Store verification data to your application update the API endpoint
 
 Sample response
 ```json
-array (
-  'amount' => '32.06',
-  'sold_at' => '2024-01-28T15:21:32+11:00',
-  'license' => 'Regular License',
-  'support_amount' => '0.00',
-  'supported_until' => NULL,
-  'item' => 
-  array (
-    'id' => 1234567890, // id of the item
-    'name' => 'product Title', // name of the item
-    'number_of_sales' => 169,
-    'author_username' => 'author_username', // author of the item
-    'author_url' => 'https://codecanyon.net/user/author_username',
-    'url' => 'https://codecanyon.net/item/product/34567890',
-    'site' => 'codecanyon.net',
-    'classification' => 'mobile/flutter',
-    'classification_url' => 'https://codecanyon.net/category/mobile/flutter',
-    'price_cents' => 11900,
-    'author_image' => 'https://s3.envato.com/files/396614067/80x80.jpg',
-    'summary' => 'Software Version: Flutter 2.x, Flutter 1.x, Other',
-    'published_at' => '2022-06-14T01:38:25+10:00',
-    'trending' => false,
-  ),
-  'buyer' => 'keosovannboravann',
-  'purchase_count' => 1,
-)  
+{
+  "amount": "32.06",
+  "sold_at": "2024-01-28T15:21:32+11:00",
+  "license": "Regular License",
+  "support_amount": "0.00",
+  "supported_until": null,
+  "item": {
+    "id": 1234567890,
+    "name": "product Title",
+    "number_of_sales": 169,
+    "author_username": "author_username",
+    "author_url": "https://codecanyon.net/user/author_username",
+    "url": "https://codecanyon.net/item/product/34567890",
+    "site": "codecanyon.net",
+    "classification": "mobile/flutter",
+    "classification_url": "https://codecanyon.net/category/mobile/flutter",
+    "price_cents": 11900,
+    "author_image": "https://s3.envato.com/files/396614067/80x80.jpg",
+    "summary": "Software Version: Flutter 2.x, Flutter 1.x, Other",
+    "published_at": "2022-06-14T01:38:25+10:00",
+    "trending": false
+  },
+  "buyer": "keosovannboravann",
+  "purchase_count": 1
+}
+
 ```
 
 ## 📂 Directory Structure
