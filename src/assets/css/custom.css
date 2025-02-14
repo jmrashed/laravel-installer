@@ -1,0 +1,31 @@
+.rounded-4{
+    border-radius: 4px;
+}
+.rounded-6{
+    border-radius: 6px;
+}
+.rounded-6{
+    border-radius: 6px;
+}
+.rounded-8{
+    border-radius: 8px;
+}
+.rounded-10{
+    border-radius: 10px;
+}
+.bg-black{
+    background-color: #000;
+}
+
+#envContent {
+    min-height: 300px;
+    height: 500px;
+}
+
+.text-red {
+    color: red !important;
+}
+
+.grid-cols-2{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
