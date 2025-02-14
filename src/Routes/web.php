@@ -66,6 +66,11 @@ Route::group(['prefix' => 'install', 'as' => 'LaravelInstaller::', 'namespace' =
         'as' => 'installation-finished',
         'uses' => 'InstallerController@installationFinished',
     ]);
+    // validatePurchase
+    Route::post('/validate-purchase', [
+        'as' => 'validate-purchase',
+        'uses' => 'PurchaseController@validatePurchase',
+    ]);
 });
 
 Route::group(['prefix' => 'update', 'as' => 'LaravelUpdater::', 'namespace' => 'Jmrashed\LaravelInstaller\Controllers', 'middleware' => 'web'], function () {

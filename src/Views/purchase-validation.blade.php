@@ -12,7 +12,8 @@
             <h1 class="capitalize text-primary border-b-[2px] border-[var(--primary)] pl-20 py-5 text-2xl font-semibold mb-4">
                 {{ env('APP_NAME') }}
             </h1>
-            <form action="" id="" method="POST">
+            <form action="{{ route('LaravelInstaller::validate-purchase') }}" id="" method="POST">
+                @csrf
                 <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4">
                     <div class="content-wrapper w-full">
                         <h4 class="text-lg no-underline bg-primary text-white font-medium text-start px-6 py-3 mb-6 rounded-[4px] w-full mt-2">
@@ -81,10 +82,10 @@
                             <i class="ri-arrow-left-line"></i>
                             {{ trans('installer_messages.purchaseValidation.previous') }}
                         </a>
-                        <a href="{{ route('LaravelInstaller::server-requirements') }}" class="btn-primary-fill">
+                        <button type="submit"  class="btn-primary-fill">
                             {{ trans('installer_messages.purchaseValidation.next') }}
                             <i class="ri-arrow-right-s-line"></i>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </form>

@@ -66,7 +66,7 @@ return [
         'title'   => 'Purchase Validation | Laravel Installer',
         'message' => 'Validate Purchase Key',
         'previous'=> 'Welcome',
-        'next'    => 'Server Requirements',
+        'next'    => 'Verify Purchase Key',
         'form' => [
             'purchaseCodeLabel' => 'Purchase Code',
             'domainLabel' => 'Domain',

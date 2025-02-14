@@ -160,7 +160,10 @@ To ensure the Laravel Installer works as expected, your environment must meet th
   - `json`
 
 ---
-
+## Force Publishing 
+```bash
+php artisan vendor:publish --tag=laravelinstaller --force
+```
 ## 🤝 Contributing
 
 Contributions are welcome! If you want to contribute:
