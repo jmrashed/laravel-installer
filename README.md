@@ -60,6 +60,66 @@ The installer will guide you through these steps:
 
 ---
 
+
+## envato validation 
+
+sample api response from your existing website
+```json
+{
+  "message": "Welcome to the Envato Purchase Validation API",
+  "account1": {
+    "token": "fsHuTBwXZTlEqZYQacniBeNZFCrT01eZ"
+  },
+  "account2": {
+    "token": "aGPUug8SeQagLaSDZ3LXdKQ8x0hHNtlc"
+  },
+  "validation": {
+    "url": "https://api.envato.com/v3/market/author/sale"
+  }
+}
+```
+
+### Update your api endpoint
+
+To get barrier token update the API endpoint
+```php
+   $envatoApiTokenUrl = 'http://your-domain.com/api/get-envato-barrier-token';
+```
+To Store verification data to your application update the API endpoint
+```php
+   $envatoApiStoreUrl = 'http://your-domain.com/api/store-envato-verification-response';
+```
+
+Sample response
+```json
+array (
+  'amount' => '32.06',
+  'sold_at' => '2024-01-28T15:21:32+11:00',
+  'license' => 'Regular License',
+  'support_amount' => '0.00',
+  'supported_until' => NULL,
+  'item' => 
+  array (
+    'id' => 1234567890, // id of the item
+    'name' => 'product Title', // name of the item
+    'number_of_sales' => 169,
+    'author_username' => 'author_username', // author of the item
+    'author_url' => 'https://codecanyon.net/user/author_username',
+    'url' => 'https://codecanyon.net/item/product/34567890',
+    'site' => 'codecanyon.net',
+    'classification' => 'mobile/flutter',
+    'classification_url' => 'https://codecanyon.net/category/mobile/flutter',
+    'price_cents' => 11900,
+    'author_image' => 'https://s3.envato.com/files/396614067/80x80.jpg',
+    'summary' => 'Software Version: Flutter 2.x, Flutter 1.x, Other',
+    'published_at' => '2022-06-14T01:38:25+10:00',
+    'trending' => false,
+  ),
+  'buyer' => 'keosovannboravann',
+  'purchase_count' => 1,
+)  
+```
+
 ## 📂 Directory Structure
 
 Here’s a simplified structure of the project directories and key files:
