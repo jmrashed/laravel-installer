@@ -1,0 +1,151 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --white: #fff;
+  --light: #d8dbe0;
+  --dark: #333;
+  --info: #0dcaf0;
+  --body: #fff;
+  --red: #ff3030;
+  --warning: #ff991a;
+  --success: rgba(8, 157, 73, 1);
+  --danger: #f44336;
+  --gray: #f6f6f6;
+
+  --primary: #15b392;
+  --secondary: #333;
+  --tertiary: #f0783c;
+  --primary-rgb: 21, 179, 146;
+  --secondary-rgb: 51, 51, 51;
+  --tertiary-rgb: 240, 120, 60;
+
+  --primary-text: #444444;
+  --secondary-text: #555555;
+  --tertiary-text: #555555;
+  --primary-btn: var(--primary);
+  --secondary-btn: var(--primary-text);
+  --tertiary-btn: #304839;
+
+  --ratting: #ff9b26;
+  --ratting-rgb: 255, 155, 38;
+
+  --section-bg-one: #fff3ee;
+  --section-bg-two: #fafafa;
+  --section-bg-three: #1f242f;
+  --primary-border: #dddddd;
+  --secondary-border: #dddddd70;
+  --tertiary-border: #d0d5dd;
+
+  --primary-shadow: 0px 4.12121px 49.4545px rgba(0, 0, 0, 0.08);
+  --secondary-shadow: 0px 4.12121px 49.4545px rgba(0, 0, 0, 0.08);
+  --remix-icon: "remixicon";
+  --inter: "Inter", sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-width: 2px;
+  scrollbar-color: #f9f4ea;
+}
+body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+html {
+  scroll-behavior: smooth;
+  @apply font-inter;
+}
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+ol,
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  vertical-align: middle;
+}
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+@layer base {
+  body {
+    background: var(--primary-bg);
+    color: var(--text-body);
+    font-style: normal;
+    font-weight: 400;
+
+    @apply text-sm md:text-base;
+  }
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }
+  a {
+    @apply text-blue-600 no-underline;
+  }
+}
+@layer components {
+  .btn-primary-fill {
+    @apply flex items-center gap-2 text-md bg-primary text-white capitalize px-5 py-3 rounded-[4px] font-medium transition-all hover:bg-[rgba(var(--primary-rgb),0.8)] hover:text-white;
+  }
+  .btn-primary-outline {
+    @apply flex items-center gap-2 text-md bg-transparent text-theme capitalize px-5 py-3 rounded-[4px] font-medium transition-all hover:bg-[rgba(var(--primary-rgb),0.8)] hover:border-transparent hover:text-white border border-theme;
+  }
+}
+
+.body-bg {
+  background-image: url(../images/body-bg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+.sidebar-item:last-child::before {
+  content: none;
+}

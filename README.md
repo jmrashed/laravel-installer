@@ -36,6 +36,7 @@ composer require jmrashed/laravel-installer
 Then, publish the configuration file:
 
 ```bash
+php artisan vendor:publish --provider="Jmrashed\LaravelInstaller\Providers\LaravelInstallerServiceProvider"
 php artisan vendor:publish --tag=installer-config
 ```
 
@@ -182,8 +183,3 @@ This package is licensed under the [MIT license](LICENSE.md).
 
 For support, feel free to open an issue on the [GitHub repository](https://github.com/jmrashed/laravel-installer/issues) or contact us directly.
  
-
-
-
-### Click the Image Below for Documentation
-[![Documentation Image](./documentation.png)](DOCUMENTATION.md)
