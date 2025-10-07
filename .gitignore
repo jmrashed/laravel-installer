@@ -27,3 +27,4 @@ composer.lock
 ### ASSET EXCLUSIONS ###
 vendor/
 test-app/
+node_modules/
