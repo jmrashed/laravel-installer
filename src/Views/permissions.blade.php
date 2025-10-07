@@ -42,7 +42,7 @@
                         {{ trans('installer_messages.permissions.previous') }}
                     </a>
                     @if (!isset($permissions['errors']))
-                        <a href="{{ route('LaravelInstaller::environment-setting') }}" class="btn-primary-fill">
+                        <a href="{{ route('LaravelInstaller::dependencies') }}" class="btn-primary-fill">
                             {{ trans('installer_messages.permissions.next') }}
                             <i class="ri-arrow-right-s-line"></i>
                         </a>

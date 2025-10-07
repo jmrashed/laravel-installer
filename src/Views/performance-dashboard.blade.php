@@ -1,73 +1,81 @@
-@extends('vendor.installer.layouts.master')
+@extends('vendor.installer.layouts.imaster')
 
 @section('template_title')
-    {{ trans('installer_messages.performance.templateTitle') }}
+    Performance Dashboard
 @endsection
 
-@section('title')
-    <i class="fa fa-tachometer fa-fw" aria-hidden="true"></i>
-    {{ trans('installer_messages.performance.title') }}
-@endsection
+@section('icontent')
+    <div class="flex">
+        @include('vendor.installer._inc.aside')
 
-@section('container')
-    <div class="tabs tabs-full">
-        <div class="tab-content">
-            <div class="tab-pane active" id="performance">
-                <div class="performance-metrics">
-                    <h4>Real-time Performance Metrics</h4>
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <h5>Execution Time</h5>
-                            <div id="execution-time" class="metric-value">--</div>
+        <div class="body-content w-full h-screen">
+            <h1 class="capitalize text-primary border-b-[2px] border-[var(--primary)] pl-20 py-5 text-2xl font-semibold mb-4">
+                {{ env('APP_NAME') }}
+            </h1>
+            <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4">
+                <div class="content-wrapper w-full">
+                    <h4 class="text-lg no-underline bg-primary text-white font-medium text-start px-6 py-3 mb-6 rounded-[4px] w-full">
+                        Performance Dashboard
+                    </h4>
+                    
+                    <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-6">
+                        <div class="card bg-white p-6 rounded-md text-center">
+                            <h5 class="text-sm font-semibold text-gray-600 mb-2">Execution Time</h5>
+                            <div id="execution-time" class="text-2xl font-bold text-primary">--</div>
                         </div>
-                        <div class="metric-card">
-                            <h5>Memory Usage</h5>
-                            <div id="memory-usage" class="metric-value">--</div>
+                        <div class="card bg-white p-6 rounded-md text-center">
+                            <h5 class="text-sm font-semibold text-gray-600 mb-2">Memory Usage</h5>
+                            <div id="memory-usage" class="text-2xl font-bold text-primary">--</div>
                         </div>
-                        <div class="metric-card">
-                            <h5>Peak Memory</h5>
-                            <div id="peak-memory" class="metric-value">--</div>
+                        <div class="card bg-white p-6 rounded-md text-center">
+                            <h5 class="text-sm font-semibold text-gray-600 mb-2">Peak Memory</h5>
+                            <div id="peak-memory" class="text-2xl font-bold text-primary">--</div>
                         </div>
-                        <div class="metric-card">
-                            <h5>Database Queries</h5>
-                            <div id="db-queries" class="metric-value">--</div>
+                        <div class="card bg-white p-6 rounded-md text-center">
+                            <h5 class="text-sm font-semibold text-gray-600 mb-2">Database Queries</h5>
+                            <div id="db-queries" class="text-2xl font-bold text-primary">--</div>
                         </div>
+                    </div>
+
+                    <div class="card bg-white p-6 rounded-md mb-6">
+                        <h5 class="text-md font-semibold text-primary mb-4">Performance History</h5>
+                        <div class="chart-container bg-gray-50 p-4 rounded">
+                            <canvas id="metricsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card bg-white p-6 rounded-md">
+                        <h5 class="text-md font-semibold text-primary mb-4">Optimization Tools</h5>
+                        <div class="grid gap-4 grid-cols-1 md:grid-cols-3">
+                            <button id="optimize-performance" class="btn-primary-fill">
+                                <i class="ri-speed-line"></i>
+                                Optimize Performance
+                            </button>
+                            <button id="clear-opcache" class="btn-primary-outline">
+                                <i class="ri-refresh-line"></i>
+                                Clear OPCache
+                            </button>
+                            <button id="garbage-collect" class="btn-primary-outline">
+                                <i class="ri-delete-bin-line"></i>
+                                Run Garbage Collection
+                            </button>
+                        </div>
+                        <div id="optimization-results" class="results mt-4"></div>
                     </div>
                 </div>
-
-                <div class="performance-history">
-                    <h4>Performance History</h4>
-                    <div id="performance-chart" class="chart-container">
-                        <canvas id="metricsChart" width="400" height="200"></canvas>
-                    </div>
-                </div>
-
-                <div class="optimization-tools">
-                    <h4>Optimization Tools</h4>
-                    <div class="optimization-buttons">
-                        <button id="optimize-performance" class="button">
-                            Optimize Performance
-                        </button>
-                        <button id="clear-opcache" class="button">
-                            Clear OPCache
-                        </button>
-                        <button id="garbage-collect" class="button">
-                            Run Garbage Collection
-                        </button>
-                    </div>
-                    <div id="optimization-results" class="results"></div>
+                
+                <div class="flex gap-4 items-center justify-center">
+                    <a href="{{ route('LaravelInstaller::cache-queue') }}" class="btn-primary-outline">
+                        <i class="ri-arrow-left-line"></i>
+                        Back
+                    </a>
+                    <a href="{{ route('LaravelInstaller::installation-finished') }}" class="btn-primary-fill">
+                        Finish Installation
+                        <i class="ri-check-double-line"></i>
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="buttons">
-        <a href="{{ route('LaravelInstaller::cache-queue') }}" class="button">
-            {{ trans('installer_messages.performance.back') }}
-        </a>
-        <a href="{{ route('LaravelInstaller::installation-finished') }}" class="button button-next">
-            {{ trans('installer_messages.performance.next') }}
-        </a>
     </div>
 
     <script>
@@ -75,7 +83,7 @@
         let chartData = [];
 
         function startMetricsMonitoring() {
-            metricsInterval = setInterval(fetchMetrics, 2000);
+            metricsInterval = setInterval(fetchMetrics, 3000);
             fetchMetrics();
         }
 
@@ -85,7 +93,8 @@
                 .then(data => {
                     updateMetricsDisplay(data);
                     updateChart(data);
-                });
+                })
+                .catch(error => console.error('Error fetching metrics:', error));
         }
 
         function updateMetricsDisplay(metrics) {
@@ -155,12 +164,22 @@
         }
 
         document.getElementById('optimize-performance').addEventListener('click', function() {
-            fetch('{{ route("LaravelInstaller::performance.optimize") }}', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('optimization-results').innerHTML = 
-                        `<div class="${data.success ? 'success' : 'error'}">${data.message}</div>`;
-                });
+            this.innerHTML = '<i class="ri-loader-4-line animate-spin"></i> Optimizing...';
+            this.disabled = true;
+            
+            fetch('{{ route("LaravelInstaller::performance.optimize") }}', { 
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('optimization-results').innerHTML = 
+                    `<div class="p-3 rounded ${data.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${data.message}</div>`;
+                this.innerHTML = '<i class="ri-speed-line"></i> Optimize Performance';
+                this.disabled = false;
+            });
         });
 
         // Start monitoring when page loads
@@ -173,40 +192,4 @@
             }
         });
     </script>
-
-    <style>
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        
-        .metric-card {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #007cba;
-        }
-        
-        .chart-container {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-        
-        .optimization-buttons {
-            display: flex;
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-    </style>
 @endsection

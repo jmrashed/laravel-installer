@@ -1,45 +1,56 @@
-@extends('vendor.installer.layouts.master')
+@extends('vendor.installer.layouts.imaster')
 
 @section('template_title')
-    {{ trans('installer_messages.dependencies.templateTitle') }}
+    Dependencies Check
 @endsection
 
-@section('title')
-    <i class="fa fa-cogs fa-fw" aria-hidden="true"></i>
-    {{ trans('installer_messages.dependencies.title') }}
-@endsection
+@section('icontent')
+    <div class="flex">
+        @include('vendor.installer._inc.aside')
 
-@section('container')
-    <div class="tabs tabs-full">
-        <div class="tab-content">
-            <div class="tab-pane active" id="dependencies">
-                @if(isset($error))
-                    <div class="alert alert-danger">
-                        <strong>Error:</strong> {{ $error }}
-                    </div>
-                @else
-                    <div class="dependency-check">
-                        <h4>Composer Dependencies</h4>
-                        <div id="dependency-results">
-                            <div class="loading">Checking dependencies...</div>
+        <div class="body-content w-full h-screen">
+            <h1 class="capitalize text-primary border-b-[2px] border-[var(--primary)] pl-20 py-5 text-2xl font-semibold mb-4">
+                {{ env('APP_NAME') }}
+            </h1>
+            <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4">
+                <div class="content-wrapper w-full">
+                    <h4 class="text-lg no-underline bg-primary text-white font-medium text-start px-6 py-3 mb-6 rounded-[4px] w-full">
+                        Dependencies Check
+                    </h4>
+                    
+                    @if(isset($error))
+                        <div class="alert alert-danger bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                            <strong>Error:</strong> {{ $error }}
                         </div>
-                        
-                        <h4>Critical Dependencies</h4>
-                        <div id="critical-results">
-                            <div class="loading">Checking critical dependencies...</div>
+                    @else
+                        <div class="dependency-check">
+                            <div class="card bg-white p-6 w-full rounded-md space-y-4">
+                                <h5 class="text-md font-semibold text-primary mb-4">Composer Dependencies</h5>
+                                <div id="dependency-results">
+                                    <div class="loading text-center py-4">Checking dependencies...</div>
+                                </div>
+                                
+                                <h5 class="text-md font-semibold text-primary mb-4 mt-6">Critical Dependencies</h5>
+                                <div id="critical-results">
+                                    <div class="loading text-center py-4">Checking critical dependencies...</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
+                </div>
                 
-                <div class="buttons">
-                    <a href="{{ route('LaravelInstaller::permissions') }}" class="button">
-                        {{ trans('installer_messages.dependencies.back') }}
+                <div class="flex gap-4 items-center justify-center">
+                    <a href="{{ route('LaravelInstaller::permissions') }}" class="btn-primary-outline">
+                        <i class="ri-arrow-left-line"></i>
+                        Back
                     </a>
-                    <button id="check-dependencies" class="button button-next">
-                        {{ trans('installer_messages.dependencies.check') }}
+                    <button id="check-dependencies" class="btn-primary-fill">
+                        Check Dependencies
+                        <i class="ri-refresh-line"></i>
                     </button>
-                    <a href="{{ route('LaravelInstaller::environment-setting') }}" class="button button-next" id="next-step" style="display:none;">
-                        {{ trans('installer_messages.dependencies.next') }}
+                    <a href="{{ route('LaravelInstaller::configuration-setting') }}" class="btn-primary-fill" id="next-step" style="display:none;">
+                        Next
+                        <i class="ri-arrow-right-s-line"></i>
                     </a>
                 </div>
             </div>
@@ -48,13 +59,25 @@
 
     <script>
         document.getElementById('check-dependencies').addEventListener('click', function() {
+            this.innerHTML = '<i class="ri-loader-4-line animate-spin"></i> Checking...';
+            this.disabled = true;
+            
             fetch('{{ route("LaravelInstaller::api.dependencies.check") }}')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById('next-step').style.display = 'inline-block';
+                        document.getElementById('next-step').style.display = 'inline-flex';
+                        this.style.display = 'none';
+                    } else {
+                        this.innerHTML = 'Check Dependencies <i class="ri-refresh-line"></i>';
+                        this.disabled = false;
                     }
                     updateDependencyResults(data);
+                })
+                .catch(error => {
+                    this.innerHTML = 'Check Dependencies <i class="ri-refresh-line"></i>';
+                    this.disabled = false;
+                    console.error('Error:', error);
                 });
         });
 
@@ -67,24 +90,34 @@
         }
 
         function formatDependencies(deps) {
-            if (!deps) return '<div class="error">Failed to check dependencies</div>';
+            if (!deps) return '<div class="error text-red-500">Failed to check dependencies</div>';
             
-            let html = '<ul class="dependency-list">';
-            deps.dependencies.forEach(dep => {
-                const status = dep.status === 'compatible' ? 'success' : 'error';
-                html += `<li class="${status}">${dep.name} - ${dep.status}</li>`;
-            });
+            let html = '<ul class="space-y-2">';
+            if (deps.dependencies) {
+                deps.dependencies.forEach(dep => {
+                    const statusClass = dep.status === 'compatible' ? 'text-green-600' : 'text-red-600';
+                    const icon = dep.status === 'compatible' ? 'ri-check-line' : 'ri-close-line';
+                    html += `<li class="flex items-center justify-between p-2 border-b">
+                        <span class="text-primary">${dep.name}</span>
+                        <span class="${statusClass}"><i class="${icon}"></i> ${dep.status}</span>
+                    </li>`;
+                });
+            }
             html += '</ul>';
             return html;
         }
 
         function formatCritical(critical) {
-            if (!critical) return '<div class="error">Failed to check critical dependencies</div>';
+            if (!critical) return '<div class="error text-red-500">Failed to check critical dependencies</div>';
             
-            let html = '<ul class="dependency-list">';
+            let html = '<ul class="space-y-2">';
             critical.forEach(dep => {
-                const status = dep.status === 'compatible' ? 'success' : 'error';
-                html += `<li class="${status}">${dep.name} - ${dep.status}</li>`;
+                const statusClass = dep.status === 'compatible' ? 'text-green-600' : 'text-red-600';
+                const icon = dep.status === 'compatible' ? 'ri-check-line' : 'ri-close-line';
+                html += `<li class="flex items-center justify-between p-2 border-b">
+                    <span class="text-primary">${dep.name}</span>
+                    <span class="${statusClass}"><i class="${icon}"></i> ${dep.status}</span>
+                </li>`;
             });
             html += '</ul>';
             return html;

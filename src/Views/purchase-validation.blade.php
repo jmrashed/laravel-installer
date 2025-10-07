@@ -82,10 +82,10 @@
                             <i class="ri-arrow-left-line"></i>
                             {{ trans('installer_messages.purchaseValidation.previous') }}
                         </a>
-                        <button type="submit"  class="btn-primary-fill">
+                        <a href="{{ route('LaravelInstaller::server-requirements') }}" class="btn-primary-fill">
                             {{ trans('installer_messages.purchaseValidation.next') }}
                             <i class="ri-arrow-right-s-line"></i>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </form>

@@ -28,7 +28,12 @@ return [
         'purchaseValidation' => 'Purchase Validation',
         'serverRequirements' => 'Server Requirements',
         'permissions' => 'Permissions',
+        'dependencies' => 'Dependencies',
         'environmentSettings' => 'Environment Settings',
+        'databaseSettings' => 'Database Settings',
+        'databaseBackup' => 'Database Migration',
+        'cacheQueue' => 'Cache & Queue',
+        'performance' => 'Performance',
         'installationFinished' => 'Installation Finished',
     ],
 

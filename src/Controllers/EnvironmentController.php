@@ -283,7 +283,7 @@ class EnvironmentController extends Controller
             'application' => 'LaravelInstaller::application-setting'
         ];
 
-        return $redirect->route($routes[$tab] ?? 'LaravelInstaller::environmentWizard');
+        return $redirect->route($routes[$tab] ?? 'LaravelInstaller::environment-setting');
     }
 
     /**
@@ -293,8 +293,8 @@ class EnvironmentController extends Controller
     {
         $routes = [
             'configuration' => 'LaravelInstaller::database-setting',
-            'database' => 'LaravelInstaller::application-setting',
-            'application' => 'LaravelInstaller::installation-finished'
+            'database' => 'LaravelInstaller::database-backup',
+            'application' => 'LaravelInstaller::cache-queue'
         ];
 
         return $redirect->route($routes[$tab])->with(['results' => $results]);
