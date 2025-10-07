@@ -88,4 +88,29 @@ class InstallerController extends Controller
     {
         return view('vendor.installer.installation-finished');
     }
+
+    public function dependencies()
+    {
+        return view('vendor.installer.dependencies');
+    }
+
+    public function performanceDashboard()
+    {
+        return view('vendor.installer.performance-dashboard');
+    }
+
+    public function cacheQueue()
+    {
+        return view('vendor.installer.cache-queue');
+    }
+
+    public function databaseBackup()
+    {
+        return view('vendor.installer.database-backup');
+    }
+
+    public function resumeInstallation()
+    {
+        return view('vendor.installer.resume-installation');
+    }
 }

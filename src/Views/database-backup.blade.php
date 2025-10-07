@@ -1,189 +1,135 @@
 @extends('vendor.installer.layouts.master')
 
 @section('template_title')
-    Database Migration
+    {{ trans('installer_messages.database_backup.templateTitle') }}
 @endsection
 
 @section('title')
     <i class="fa fa-database fa-fw" aria-hidden="true"></i>
-    Database Migration & Backup
+    {{ trans('installer_messages.database_backup.title') }}
 @endsection
 
 @section('container')
     <div class="tabs tabs-full">
         <div class="tab-content">
-            <div class="tab-pane active" role="tabpanel">
-                <div class="migration-container">
-                    <div class="backup-status" id="backup-status" style="display: none;">
-                        <div class="alert alert-info">
-                            <i class="fa fa-shield fa-fw"></i>
-                            Database backup created successfully. Your data is safe.
-                        </div>
-                    </div>
+            <div class="tab-pane active" id="database-backup">
+                <div class="backup-info">
+                    <p>{{ trans('installer_messages.database_backup.description') }}</p>
+                </div>
 
-                    <div class="migration-options">
-                        <h4>Migration Options</h4>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="run-seeders" checked>
-                                Run database seeders
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="create-backup" checked>
-                                Create backup before migration
-                            </label>
-                        </div>
+                <div class="backup-options">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="create_backup" checked>
+                            Create database backup before migration
+                        </label>
                     </div>
-
-                    <div class="migration-progress" id="migration-progress" style="display: none;">
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progress-fill"></div>
-                        </div>
-                        <div class="progress-text" id="progress-text">Preparing migration...</div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="run_seeders">
+                            Run database seeders after migration
+                        </label>
                     </div>
-
-                    <div class="migration-actions">
-                        <button type="button" class="button" id="start-migration">
-                            <i class="fa fa-play fa-fw"></i>
-                            Start Migration
-                        </button>
-                        
-                        <button type="button" class="button button-danger" id="rollback-btn" style="display: none;">
-                            <i class="fa fa-undo fa-fw"></i>
-                            Rollback Database
-                        </button>
-                    </div>
-
-                    <div class="migration-log" id="migration-log" style="display: none;">
-                        <h4>Migration Log</h4>
-                        <div class="log-content" id="log-content"></div>
+                    
+                    <div class="form-group">
+                        <label for="batch_size">Migration batch size (for large databases):</label>
+                        <input type="number" id="batch_size" value="10" min="1" max="100">
                     </div>
                 </div>
+
+                <div class="migration-controls">
+                    <button id="start-migration" class="button button-next">
+                        Start Database Migration
+                    </button>
+                    <button id="rollback-migration" class="button" style="display:none;">
+                        Rollback Migration
+                    </button>
+                </div>
+
+                <div id="migration-progress" class="progress-section" style="display:none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div id="migration-status" class="status-text"></div>
+                </div>
+
+                <div id="migration-results" class="results"></div>
             </div>
         </div>
     </div>
-@endsection
 
-@section('scripts')
+    <div class="buttons">
+        <a href="{{ route('LaravelInstaller::database-setting') }}" class="button">
+            {{ trans('installer_messages.database_backup.back') }}
+        </a>
+        <a href="{{ route('LaravelInstaller::cache-queue') }}" class="button button-next" id="next-step" style="display:none;">
+            {{ trans('installer_messages.database_backup.next') }}
+        </a>
+    </div>
+
     <script>
+        let migrationInProgress = false;
+
         document.getElementById('start-migration').addEventListener('click', function() {
-            startMigration();
-        });
-
-        document.getElementById('rollback-btn').addEventListener('click', function() {
-            rollbackDatabase();
-        });
-
-        function startMigration() {
-            const progressDiv = document.getElementById('migration-progress');
-            const logDiv = document.getElementById('migration-log');
-            const startBtn = document.getElementById('start-migration');
+            if (migrationInProgress) return;
             
-            progressDiv.style.display = 'block';
-            logDiv.style.display = 'block';
-            startBtn.disabled = true;
+            migrationInProgress = true;
+            this.disabled = true;
             
-            updateProgress(25, 'Creating database backup...');
+            const progressSection = document.getElementById('migration-progress');
+            const statusText = document.getElementById('migration-status');
+            const resultsDiv = document.getElementById('migration-results');
             
-            fetch('/installer/database/migrate', {
+            progressSection.style.display = 'block';
+            statusText.textContent = 'Starting migration...';
+            
+            const formData = new FormData();
+            formData.append('create_backup', document.getElementById('create_backup').checked);
+            formData.append('seed', document.getElementById('run_seeders').checked);
+            formData.append('batch_size', document.getElementById('batch_size').value);
+            
+            fetch('{{ route("LaravelInstaller::api.database.migrate") }}', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({
-                    seed: document.getElementById('run-seeders').checked,
-                    backup: document.getElementById('create-backup').checked
-                })
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
+                migrationInProgress = false;
+                document.getElementById('start-migration').disabled = false;
+                
                 if (data.success) {
-                    updateProgress(100, 'Migration completed successfully!');
-                    addLog('✓ Migration completed successfully', 'success');
-                    if (data.backup_id) {
-                        document.getElementById('backup-status').style.display = 'block';
-                        document.getElementById('rollback-btn').style.display = 'inline-block';
-                    }
+                    statusText.textContent = 'Migration completed successfully!';
+                    document.getElementById('progress-fill').style.width = '100%';
+                    document.getElementById('next-step').style.display = 'inline-block';
+                    resultsDiv.innerHTML = `<div class="success">${data.message}</div>`;
                 } else {
-                    updateProgress(0, 'Migration failed');
-                    addLog('✗ Migration failed: ' + data.message, 'error');
-                    document.getElementById('rollback-btn').style.display = 'inline-block';
+                    statusText.textContent = 'Migration failed';
+                    resultsDiv.innerHTML = `<div class="error">${data.message}</div>`;
+                    document.getElementById('rollback-migration').style.display = 'inline-block';
                 }
             })
             .catch(error => {
-                updateProgress(0, 'Migration failed');
-                addLog('✗ Network error: ' + error.message, 'error');
-            })
-            .finally(() => {
-                startBtn.disabled = false;
+                migrationInProgress = false;
+                document.getElementById('start-migration').disabled = false;
+                statusText.textContent = 'Migration failed';
+                resultsDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
             });
-        }
+        });
 
-        function rollbackDatabase() {
-            if (!confirm('Are you sure you want to rollback the database? This will restore the previous state.')) {
-                return;
+        document.getElementById('rollback-migration').addEventListener('click', function() {
+            if (confirm('Are you sure you want to rollback the migration?')) {
+                fetch('{{ route("LaravelInstaller::api.database.rollback") }}', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsDiv = document.getElementById('migration-results');
+                        resultsDiv.innerHTML = `<div class="${data.success ? 'success' : 'error'}">${data.message}</div>`;
+                        
+                        if (data.success) {
+                            this.style.display = 'none';
+                        }
+                    });
             }
-
-            fetch('/installer/database/rollback', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    addLog('✓ Database rollback completed', 'success');
-                } else {
-                    addLog('✗ Rollback failed: ' + data.message, 'error');
-                }
-            });
-        }
-
-        function updateProgress(percent, text) {
-            document.getElementById('progress-fill').style.width = percent + '%';
-            document.getElementById('progress-text').textContent = text;
-        }
-
-        function addLog(message, type = 'info') {
-            const logContent = document.getElementById('log-content');
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry log-' + type;
-            logEntry.textContent = new Date().toLocaleTimeString() + ' - ' + message;
-            logContent.appendChild(logEntry);
-        }
+        });
     </script>
-
-    <style>
-        .migration-container { padding: 2rem; }
-        .migration-options { margin: 1rem 0; }
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: #28a745;
-            transition: width 0.3s ease;
-        }
-        .progress-text { margin-top: 0.5rem; text-align: center; }
-        .log-content {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            padding: 1rem;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .log-entry { margin: 0.25rem 0; }
-        .log-success { color: #28a745; }
-        .log-error { color: #dc3545; }
-        .button-danger { background: #dc3545; }
-    </style>
 @endsection

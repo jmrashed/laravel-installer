@@ -7,7 +7,7 @@
 @section('icontent')
     <div class="h-screen w-full flex flex-col justify-center items-start gap-10  pl-4">
         <div class="welcome-caption flex gap-6 flex-col">
-            <img src="{{ asset('installer/img/company-logo.png') }}" alt="logo" class="max-w-[150px]">
+            <img src="{{ asset('installer/img/logo.png') }}" alt="logo" class="max-w-[150px]">
             <h1 class="text-[40px] text-primary font-bold">{{ env('APP_NAME') }} {{ trans('installer_messages.installation') }}...</h1>
             <div class="flex gap-4 items-center justify-start">
                 <img src="{{ asset('installer/img/laravel.png') }}" alt="laravel" class="max-w-[150px] max-h-[40px]">

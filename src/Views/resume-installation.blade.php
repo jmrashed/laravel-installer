@@ -1,171 +1,202 @@
 @extends('vendor.installer.layouts.master')
 
 @section('template_title')
-    Resume Installation
+    {{ trans('installer_messages.resume.templateTitle') }}
 @endsection
 
 @section('title')
     <i class="fa fa-play fa-fw" aria-hidden="true"></i>
-    Resume Installation
+    {{ trans('installer_messages.resume.title') }}
 @endsection
 
 @section('container')
-    @include('vendor.installer.layouts.progress-bar')
-    
     <div class="tabs tabs-full">
         <div class="tab-content">
-            <div class="tab-pane active" role="tabpanel">
-                <div class="resume-container">
-                    <div class="resume-info">
-                        <h3>Installation in Progress</h3>
-                        <p>We detected that you have a previous installation in progress. You can continue from where you left off or start over.</p>
-                        
-                        <div class="installation-status" id="installation-status">
-                            <div class="status-item">
-                                <strong>Last Step:</strong> <span id="last-step">Loading...</span>
-                            </div>
-                            <div class="status-item">
-                                <strong>Progress:</strong> <span id="current-progress">Loading...</span>
-                            </div>
-                            <div class="status-item">
-                                <strong>Started:</strong> <span id="started-time">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="tab-pane active" id="resume">
+                <div class="resume-info">
+                    <h4>Installation Progress</h4>
+                    <p>{{ trans('installer_messages.resume.description') }}</p>
+                </div>
 
-                    <div class="resume-actions">
-                        <button type="button" class="button button-primary" id="continue-btn">
-                            <i class="fa fa-play fa-fw"></i>
-                            Continue Installation
-                        </button>
-                        
-                        <button type="button" class="button button-secondary" id="restart-btn">
-                            <i class="fa fa-refresh fa-fw"></i>
-                            Start Over
-                        </button>
+                <div class="progress-overview">
+                    <div id="progress-steps" class="steps-container">
+                        <!-- Progress steps will be loaded here -->
                     </div>
                 </div>
+
+                <div class="resume-actions">
+                    <button id="resume-installation" class="button button-next">
+                        Resume Installation
+                    </button>
+                    <button id="restart-installation" class="button">
+                        Restart from Beginning
+                    </button>
+                </div>
+
+                <div id="resume-results" class="results"></div>
             </div>
         </div>
     </div>
-@endsection
 
-@section('scripts')
+    <div class="buttons">
+        <a href="{{ route('LaravelInstaller::welcome') }}" class="button">
+            {{ trans('installer_messages.resume.back') }}
+        </a>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            loadInstallationStatus();
+        function loadProgress() {
+            fetch('{{ route("LaravelInstaller::api.progress") }}')
+                .then(response => response.json())
+                .then(data => {
+                    displayProgress(data);
+                });
+        }
+
+        function displayProgress(progress) {
+            const stepsContainer = document.getElementById('progress-steps');
+            const steps = [
+                { key: 'welcome', name: 'Welcome', route: '{{ route("LaravelInstaller::welcome") }}' },
+                { key: 'requirements', name: 'Requirements', route: '{{ route("LaravelInstaller::server-requirements") }}' },
+                { key: 'permissions', name: 'Permissions', route: '{{ route("LaravelInstaller::permissions") }}' },
+                { key: 'dependencies', name: 'Dependencies', route: '{{ route("LaravelInstaller::dependencies") }}' },
+                { key: 'environment', name: 'Environment', route: '{{ route("LaravelInstaller::environment-setting") }}' },
+                { key: 'database', name: 'Database', route: '{{ route("LaravelInstaller::database-setting") }}' },
+                { key: 'backup', name: 'Database Backup', route: '{{ route("LaravelInstaller::database-backup") }}' },
+                { key: 'cache_queue', name: 'Cache & Queue', route: '{{ route("LaravelInstaller::cache-queue") }}' },
+                { key: 'performance', name: 'Performance', route: '{{ route("LaravelInstaller::performance-dashboard") }}' },
+                { key: 'finished', name: 'Finished', route: '{{ route("LaravelInstaller::installation-finished") }}' }
+            ];
+
+            let html = '<div class="progress-steps">';
             
-            document.getElementById('continue-btn').addEventListener('click', continueInstallation);
-            document.getElementById('restart-btn').addEventListener('click', restartInstallation);
+            steps.forEach((step, index) => {
+                const stepProgress = progress.steps[step.key] || { status: 'pending' };
+                const statusClass = getStatusClass(stepProgress.status);
+                const isCurrentStep = progress.current_step === step.key;
+                
+                html += `
+                    <div class="step ${statusClass} ${isCurrentStep ? 'current' : ''}">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="step-info">
+                            <div class="step-name">${step.name}</div>
+                            <div class="step-status">${stepProgress.status}</div>
+                        </div>
+                        ${stepProgress.status === 'completed' ? 
+                            `<a href="${step.route}" class="step-link">View</a>` : ''}
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            stepsContainer.innerHTML = html;
+
+            // Update resume button
+            const resumeBtn = document.getElementById('resume-installation');
+            const currentStepRoute = steps.find(s => s.key === progress.current_step)?.route;
+            
+            if (currentStepRoute) {
+                resumeBtn.onclick = () => window.location.href = currentStepRoute;
+            }
+        }
+
+        function getStatusClass(status) {
+            switch (status) {
+                case 'completed': return 'step-completed';
+                case 'in_progress': return 'step-in-progress';
+                case 'failed': return 'step-failed';
+                default: return 'step-pending';
+            }
+        }
+
+        document.getElementById('restart-installation').addEventListener('click', function() {
+            if (confirm('Are you sure you want to restart the installation? This will reset all progress.')) {
+                fetch('{{ route("LaravelInstaller::api.progress.reset") }}', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '{{ route("LaravelInstaller::welcome") }}';
+                        }
+                    });
+            }
         });
 
-        async function loadInstallationStatus() {
-            try {
-                const response = await fetch('/installer/progress');
-                const progress = await response.json();
-                
-                document.getElementById('last-step').textContent = progress.current_step || 'Unknown';
-                document.getElementById('current-progress').textContent = progress.percentage + '%';
-                document.getElementById('started-time').textContent = new Date(progress.started_at).toLocaleString();
-                
-            } catch (error) {
-                console.error('Failed to load installation status:', error);
-            }
-        }
-
-        async function continueInstallation() {
-            try {
-                const response = await fetch('/installer/progress');
-                const progress = await response.json();
-                
-                const routeMap = {
-                    'welcome': '{{ route("LaravelInstaller::welcome") }}',
-                    'requirements': '{{ route("LaravelInstaller::requirements") }}',
-                    'permissions': '{{ route("LaravelInstaller::permissions") }}',
-                    'environment': '{{ route("LaravelInstaller::environmentWizard") }}',
-                    'database': '{{ route("LaravelInstaller::database") }}',
-                    'migration': '{{ route("LaravelInstaller::final") }}',
-                    'finished': '{{ route("LaravelInstaller::finished") }}'
-                };
-                
-                const nextRoute = routeMap[progress.current_step] || routeMap['welcome'];
-                window.location.href = nextRoute;
-                
-            } catch (error) {
-                console.error('Failed to continue installation:', error);
-                alert('Failed to continue installation. Please try again.');
-            }
-        }
-
-        async function restartInstallation() {
-            if (!confirm('Are you sure you want to start over? This will reset all progress.')) {
-                return;
-            }
-            
-            try {
-                await fetch('/installer/progress/reset', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
-                });
-                
-                window.location.href = '{{ route("LaravelInstaller::welcome") }}';
-                
-            } catch (error) {
-                console.error('Failed to reset installation:', error);
-                alert('Failed to reset installation. Please try again.');
-            }
-        }
+        // Load progress on page load
+        document.addEventListener('DOMContentLoaded', loadProgress);
     </script>
 
     <style>
-        .resume-container {
-            text-align: center;
-            padding: 2rem;
-        }
-        
-        .resume-info {
-            margin-bottom: 2rem;
-        }
-        
-        .installation-status {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            text-align: left;
-        }
-        
-        .status-item {
-            margin-bottom: 0.5rem;
-        }
-        
-        .status-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .resume-actions {
+        .progress-steps {
             display: flex;
+            flex-direction: column;
             gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .step.current {
+            border-color: #007cba;
+            background: #e3f2fd;
+        }
+        
+        .step-completed {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .step-in-progress {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+        
+        .step-failed {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #007cba;
+            color: white;
+            display: flex;
+            align-items: center;
             justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
         }
         
-        .button-primary {
-            background: #007bff;
+        .step-info {
+            flex: 1;
+        }
+        
+        .step-name {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+        
+        .step-status {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: capitalize;
+        }
+        
+        .step-link {
+            padding: 0.5rem 1rem;
+            background: #007cba;
             color: white;
-        }
-        
-        .button-secondary {
-            background: #6c757d;
-            color: white;
-        }
-        
-        @media (max-width: 768px) {
-            .resume-actions {
-                flex-direction: column;
-            }
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
         }
     </style>
 @endsection

@@ -10,12 +10,15 @@ class ProgressMiddleware
 {
     private $stepRouteMap = [
         'LaravelInstaller::welcome' => 'welcome',
-        'LaravelInstaller::requirements' => 'requirements',
+        'LaravelInstaller::server-requirements' => 'requirements',
         'LaravelInstaller::permissions' => 'permissions',
-        'LaravelInstaller::environmentWizard' => 'environment',
-        'LaravelInstaller::database' => 'database',
-        'LaravelInstaller::final' => 'migration',
-        'LaravelInstaller::finished' => 'finished'
+        'LaravelInstaller::dependencies' => 'dependencies',
+        'LaravelInstaller::environment-setting' => 'environment',
+        'LaravelInstaller::database-setting' => 'database',
+        'LaravelInstaller::database-backup' => 'backup',
+        'LaravelInstaller::cache-queue' => 'cache_queue',
+        'LaravelInstaller::performance-dashboard' => 'performance',
+        'LaravelInstaller::installation-finished' => 'finished'
     ];
 
     public function handle(Request $request, Closure $next)

@@ -307,6 +307,44 @@ return [
 
     /*
      *
+     * v2.0.0 New Features translations.
+     *
+     */
+    'dependencies' => [
+        'templateTitle' => 'Dependencies Check',
+        'title' => 'Dependencies Check',
+        'back' => 'Back',
+        'next' => 'Next',
+        'check' => 'Check Dependencies',
+    ],
+    'cache_queue' => [
+        'templateTitle' => 'Cache & Queue Setup',
+        'title' => 'Cache & Queue Setup',
+        'back' => 'Back',
+        'next' => 'Next',
+    ],
+    'database_backup' => [
+        'templateTitle' => 'Database Migration & Backup',
+        'title' => 'Database Migration & Backup',
+        'description' => 'This step will create a backup of your database before running migrations.',
+        'back' => 'Back',
+        'next' => 'Next',
+    ],
+    'performance' => [
+        'templateTitle' => 'Performance Dashboard',
+        'title' => 'Performance Dashboard',
+        'back' => 'Back',
+        'next' => 'Next',
+    ],
+    'resume' => [
+        'templateTitle' => 'Resume Installation',
+        'title' => 'Resume Installation',
+        'description' => 'You can resume your installation from where you left off.',
+        'back' => 'Back to Welcome',
+    ],
+
+    /*
+     *
      * Installed Log translations.
      *
      */

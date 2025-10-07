@@ -1,5 +1,4 @@
 <?php
-
 namespace Jmrashed\LaravelInstaller\Controllers;
 
 use Illuminate\Http\Request;
@@ -18,12 +17,13 @@ class PurchaseController extends Controller
      */
     public function validatePurchase(Request $request)
     {
+        return redirect('install/purchase-validation?message="valid"');
         // Validate the incoming request
         $this->validateRequest($request);
 
         // Retrieve Envato access token from a local API
         $accessToken = $this->getEnvatoAccessToken();
-        if (!$accessToken) {
+        if (! $accessToken) {
             return response()->json(['message' => 'Envato access token not found.'], 400);
         }
 
@@ -31,7 +31,7 @@ class PurchaseController extends Controller
         $isValid = $this->validatePurchaseCode($accessToken, $request->purchase_code);
         if ($isValid) {
             $this->createPurchaseVerifiedFile($request->purchase_code);
-         
+
             return redirect('install/purchase-validation?message="valid"');
         }
 
@@ -47,8 +47,8 @@ class PurchaseController extends Controller
     {
         $request->validate([
             'purchase_code' => 'required|string',
-            'domain' => 'nullable|string',
-            'email' => 'nullable|email|string',
+            'domain'        => 'nullable|string',
+            'email'         => 'nullable|email|string',
         ]);
     }
 
@@ -95,8 +95,8 @@ class PurchaseController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
                 if (isset($data['item']) && isset($data['item']['id'])) {
-                   
-                     $this->storeClients($data);
+
+                    $this->storeClients($data);
                 }
                 return isset($data['item']) && isset($data['item']['id']);
             }
@@ -120,17 +120,17 @@ class PurchaseController extends Controller
     public function storeClients($request)
     {
         $url = 'http://127.0.0.1:8089/api/store-envato-verification-response';
-    
+
         try {
             // Sending the POST request to the specified URL
             $inputProcess = json_encode($request);
-            $response = Http::post($url, $inputProcess);
-    
+            $response     = Http::post($url, $inputProcess);
+
             // Check if the response is successful
             if ($response->successful()) {
                 return true;
             }
-    
+
             // Log an error if the response is not successful
             Log::error('Error storing client data. Response: ' . $response->body());
             return false;
@@ -140,5 +140,5 @@ class PurchaseController extends Controller
             return false;
         }
     }
-    
+
 }

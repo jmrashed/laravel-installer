@@ -1,8 +1,49 @@
-# Laravel Installer
+# Laravel Installer v2.0.0
 
 [![Latest Stable Version](https://poser.pugx.org/jmrashed/laravel-installer/v/stable)](https://packagist.org/packages/jmrashed/laravel-installer) [![Total Downloads](https://poser.pugx.org/jmrashed/laravel-installer/downloads)](https://packagist.org/packages/jmrashed/laravel-installer) [![Monthly Downloads](https://poser.pugx.org/jmrashed/laravel-installer/d/monthly)](https://packagist.org/packages/jmrashed/laravel-installer) [![License](https://poser.pugx.org/jmrashed/laravel-installer/license)](https://packagist.org/packages/jmrashed/laravel-installer) [![Stars](https://img.shields.io/github/stars/jmrashed/laravel-installer.svg?style=social&label=Stars)](https://github.com/jmrashed/laravel-installer) [![Forks](https://img.shields.io/github/forks/jmrashed/laravel-installer.svg?style=social&label=Forks)](https://github.com/jmrashed/laravel-installer)
 
-**Laravel Installer** is a complete package designed to simplify the installation process for Laravel projects. This installer handles system requirement checks, environment configuration, database setup, and purchase code validation.
+**Laravel Installer v2.0.0** is a complete enterprise-grade package designed to simplify and secure the installation process for Laravel projects. This installer features advanced security, performance monitoring, database backup/recovery, and a comprehensive 9-step installation process.
+
+---
+
+## 🚀 **What's New in v2.0.0**
+
+### ✅ **Complete 9-Step Installation Process**
+1. **Welcome Screen** - Introduction and overview
+2. **Server Requirements** - PHP version and extension checks
+3. **File Permissions** - Directory permission validation
+4. **Dependencies Check** - Composer dependency validation *(NEW)*
+5. **Environment Setup** - .env file configuration
+6. **Database Configuration** - Database connection setup
+7. **Database Backup & Migration** - Automated backup and migration *(NEW)*
+8. **Cache & Queue Setup** - Performance optimization *(NEW)*
+9. **Performance Dashboard** - Real-time monitoring *(NEW)*
+
+### 🛡️ **Enhanced Security Features**
+- **XSS Protection** - Input sanitization and validation
+- **Rate Limiting** - IP-based request throttling (20 req/5min)
+- **Security Headers** - CSP, Frame Options, XSS Protection
+- **Audit Logging** - Comprehensive security event logging
+- **Suspicious Content Detection** - Automatic threat detection
+
+### ⚡ **Performance Monitoring**
+- **Real-time Metrics** - Execution time, memory usage tracking
+- **Performance Dashboard** - Interactive charts and graphs
+- **Database Optimization** - Query optimization for large datasets
+- **Cache Management** - Automated cache clearing and optimization
+- **Memory Optimization** - Garbage collection and memory management
+
+### 🔄 **Resumable Installation**
+- **Progress Tracking** - Visual progress indicators
+- **State Persistence** - Resume interrupted installations
+- **Step Validation** - Prevent skipping required steps
+- **Error Recovery** - Automatic rollback on failures
+
+### 💾 **Database Backup & Recovery**
+- **Pre-migration Backup** - Automatic database backup
+- **Multi-database Support** - MySQL, PostgreSQL, SQLite
+- **Rollback Capability** - Restore on migration failures
+- **Batch Processing** - Handle large database migrations
 
 ---
 
@@ -17,61 +58,179 @@
 
 ## 🌟 Features
 
-- **System Requirements Check**: Automatically verifies PHP version and required extensions.
-- **Environment File Setup**: Helps create and configure the `.env` file.
-- **Database Configuration**: Offers the option to run migrations, seeders, or import an SQL dump.
-- **Purchase Code Validation**: Built-in validation for purchase codes.
-- **User-Friendly Interface**: A guided step-by-step installation process with a simple interface.
+### **Core Features**
+- ✅ **System Requirements Check** - PHP version and extension validation
+- ✅ **Environment File Setup** - Interactive .env configuration
+- ✅ **Database Configuration** - Multi-database support with testing
+- ✅ **Purchase Code Validation** - Envato marketplace integration
+- ✅ **User-Friendly Interface** - Modern responsive design
+
+### **v2.0.0 New Features**
+- ✅ **Dependency Management** - Composer package validation and installation
+- ✅ **Performance Monitoring** - Real-time metrics and optimization
+- ✅ **Security Enhancements** - XSS protection, rate limiting, audit logging
+- ✅ **Database Backup/Recovery** - Automated backup with rollback capability
+- ✅ **Cache & Queue Setup** - Redis, database, sync queue configuration
+- ✅ **Progress Tracking** - Resumable installation with state persistence
+- ✅ **Multi-language Support** - 18+ languages supported
+- ✅ **API Endpoints** - RESTful APIs for all installation operations
 
 ---
 
 ## 🛠️ Installation
 
-To install the package, run the following command:
-
+### **Step 1: Install Package**
 ```bash
 composer require jmrashed/laravel-installer
 ```
 
-Then, publish the configuration file:
-
+### **Step 2: Publish Configuration**
 ```bash
 php artisan vendor:publish --provider="Jmrashed\LaravelInstaller\Providers\LaravelInstallerServiceProvider"
 php artisan vendor:publish --tag=installer-config
+```
+
+### **Step 3: Publish Assets (Optional)**
+```bash
+php artisan vendor:publish --tag=laravelinstaller --force
 ```
 
 ---
 
 ## 🚀 How to Use
 
-After installation, run the installer using:
+### **Web Interface**
+Navigate to `/install` in your browser to start the installation wizard.
 
+### **Command Line**
 ```bash
 php artisan installer:run
 ```
 
-The installer will guide you through these steps:
-
-1. **System Requirements Check**: Ensures the necessary PHP version and extensions are installed.
-2. **Environment File Setup**: Prompts for database credentials and generates the `.env` file.
-3. **Database Setup**: Choose to run migrations and seeders or import a SQL dump.
-4. **Purchase Code Validation**: If enabled, the user is required to enter their purchase code.
-5. **Completion**: Confirms successful installation.
+### **Clear Installer Caches**
+```bash
+php artisan installer:clear-caches
+```
 
 ---
 
+## 🔧 **API Endpoints**
 
-## envato validation 
+### **Progress Tracking**
+- `GET /install/api/progress` - Get installation progress
+- `POST /install/api/progress/update` - Update progress step
 
-sample api response from your existing website
+### **Dependencies**
+- `GET /install/api/dependencies/check` - Check dependencies
+- `POST /install/api/dependencies/install` - Install packages
+
+### **Performance**
+- `GET /install/api/performance/metrics` - Get real-time metrics
+- `POST /install/api/performance/optimize` - Optimize performance
+
+### **Database**
+- `POST /install/api/database/migrate` - Run migrations with backup
+- `POST /install/api/database/rollback` - Rollback to backup
+
+### **Cache & Queue**
+- `POST /install/api/cache/clear` - Clear all caches
+- `POST /install/api/queue/setup` - Configure queue drivers
+
+---
+
+## 🛡️ **Security Features**
+
+### **Input Validation**
+```php
+// All inputs are sanitized and validated
+$sanitizedInput = SecurityHelper::sanitizeInput($request->input());
+```
+
+### **Rate Limiting**
+```php
+// IP-based rate limiting (20 requests per 5 minutes)
+RateLimiter::attempt('installer:' . $request->ip(), 20, 300);
+```
+
+### **Security Headers**
+- `X-Content-Type-Options: nosniff`
+- `X-Frame-Options: DENY`
+- `X-XSS-Protection: 1; mode=block`
+- `Content-Security-Policy: default-src 'self'`
+
+---
+
+## ⚡ **Performance Features**
+
+### **Real-time Monitoring**
+```javascript
+// Performance metrics are tracked automatically
+fetch('/install/api/performance/metrics')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Execution Time:', data.execution_time);
+    console.log('Memory Usage:', data.memory_used);
+  });
+```
+
+### **Database Optimization**
+```php
+// Large database handling
+DatabaseOptimizer::optimizeForLargeDatabase();
+DatabaseOptimizer::runMigrationsInBatches(10);
+```
+
+---
+
+## 💾 **Database Backup**
+
+### **Automatic Backup**
+```php
+// Backup is created automatically before migrations
+$backupId = DatabaseBackupManager::createBackup();
+```
+
+### **Manual Rollback**
+```php
+// Rollback to previous state
+DatabaseBackupManager::restoreBackup($backupId);
+```
+
+---
+
+## 🔄 **Progress Tracking**
+
+### **Check Progress**
+```php
+$progress = ProgressTracker::getProgress();
+echo "Current Step: " . $progress['current_step'];
+echo "Completion: " . $progress['completion_percentage'] . "%";
+```
+
+### **Resume Installation**
+```php
+if (ProgressTracker::canResume('database')) {
+    // Continue from database step
+}
+```
+
+---
+
+## 🌐 **Envato Integration**
+
+### **API Configuration**
+```php
+// Update API endpoints in PurchaseController
+$envatoApiTokenUrl = 'https://your-domain.com/api/get-envato-barrier-token';
+$envatoApiStoreUrl = 'https://your-domain.com/api/store-envato-verification-response';
+```
+
+### **Sample API Response**
 ```json
 {
   "message": "Welcome to the Envato Purchase Validation API",
   "account1": {
     "token": "fsHuTBwXZTlEqZYQacniBeNZFCrT01eZ"
-  },
-  "account2": {
-    "token": "aGPUug8SeQagLaSDZ3LXdKQ8x0hHNtlc"
   },
   "validation": {
     "url": "https://api.envato.com/v3/market/author/sale"
@@ -79,170 +238,141 @@ sample api response from your existing website
 }
 ```
 
-### Update your api endpoint
+---
 
-To get barrier token update the API endpoint
-```php
-   $envatoApiTokenUrl = 'http://your-domain.com/api/get-envato-barrier-token';
-```
-To Store verification data to your application update the API endpoint
-```php
-   $envatoApiStoreUrl = 'http://your-domain.com/api/store-envato-verification-response';
-```
-
-Sample response
-```json
-{
-  "amount": "32.06",
-  "sold_at": "2024-01-28T15:21:32+11:00",
-  "license": "Regular License",
-  "support_amount": "0.00",
-  "supported_until": null,
-  "item": {
-    "id": 1234567890,
-    "name": "product Title",
-    "number_of_sales": 169,
-    "author_username": "author_username",
-    "author_url": "https://codecanyon.net/user/author_username",
-    "url": "https://codecanyon.net/item/product/34567890",
-    "site": "codecanyon.net",
-    "classification": "mobile/flutter",
-    "classification_url": "https://codecanyon.net/category/mobile/flutter",
-    "price_cents": 11900,
-    "author_image": "https://s3.envato.com/files/396614067/80x80.jpg",
-    "summary": "Software Version: Flutter 2.x, Flutter 1.x, Other",
-    "published_at": "2022-06-14T01:38:25+10:00",
-    "trending": false
-  },
-  "buyer": "keosovannboravann",
-  "purchase_count": 1
-}
-
-```
-
-## 📂 Directory Structure
-
-Here’s a simplified structure of the project directories and key files:
+## 📂 **v2.0.0 Directory Structure**
 
 ```text
-- 📁 src/
-   - 📁 Config/
-      - 📄 installer.php
-   - 📁 Controllers/
-      - 📄 DatabaseController.php
-      - 📄 EnvironmentController.php
-   - 📁 Events/
-      - 📄 EnvironmentSaved.php
-      - 📄 LaravelInstallerFinished.php
-   - 📁 Helpers/
-      - 📄 DatabaseManager.php
-      - 📄 EnvironmentManager.php
-   - 📁 Middleware/
-      - 📄 canInstall.php
-      - 📄 canUpdate.php
-   - 📁 Providers/
-      - 📄 LaravelInstallerServiceProvider.php
-   - 📁 Routes/
-      - 📄 web.php
-   - 📁 Views/
-      - 📁 layouts/
-         - 📄 master-update.blade.php
-         - 📄 master.blade.php
-      - 📁 update/
-         - 📄 finished.blade.php
-         - 📄 overview.blade.php
-      - 📄 environment-classic.blade.php
-      - 📄 environment-wizard.blade.php
-   - 📁 assets/
-      - 📁 css/
-         - 📄 style.css
-         - 📄 style.css.map
-      - 📁 fonts/
-         - 📄 FontAwesome.otf
-         - 📄 fontawesome-webfont.eot
-      - 📁 img/
-         - 📁 favicon/
-            - 📄 favicon-16x16.png
-            - 📄 favicon-32x32.png
-         - 📄 background.png
-         - 📄 pattern.png
-- 📄 LICENSE
-- 📄 README.md
+src/
+├── Commands/
+│   ├── ClearInstallerCaches.php
+│   └── InstallerRunCommand.php
+├── Config/
+│   ├── installer.php
+│   ├── audit.php
+│   └── logging.php
+├── Controllers/
+│   ├── CacheQueueController.php      # NEW
+│   ├── DatabaseController.php        # ENHANCED
+│   ├── DependencyController.php      # NEW
+│   ├── PerformanceController.php     # NEW
+│   ├── ProgressController.php        # NEW
+│   └── [existing controllers...]
+├── Helpers/
+│   ├── BackupManager.php            # NEW
+│   ├── CacheQueueManager.php        # NEW
+│   ├── DatabaseBackupManager.php    # NEW
+│   ├── DependencyChecker.php        # NEW
+│   ├── PerformanceMonitor.php       # NEW
+│   ├── ProgressTracker.php          # NEW
+│   ├── SecurityHelper.php           # NEW
+│   └── [existing helpers...]
+├── Middleware/
+│   ├── SecurityMiddleware.php       # NEW
+│   ├── PerformanceMiddleware.php    # NEW
+│   ├── ProgressMiddleware.php       # NEW
+│   ├── DependencyMiddleware.php     # NEW
+│   └── [existing middleware...]
+├── Views/
+│   ├── dependencies.blade.php       # NEW
+│   ├── performance-dashboard.blade.php # NEW
+│   ├── cache-queue.blade.php        # NEW
+│   ├── database-backup.blade.php    # NEW
+│   ├── resume-installation.blade.php # NEW
+│   └── [existing views...]
+└── Routes/
+    ├── web.php                      # ENHANCED
+    └── backup.php                   # NEW
 ```
-
----
-
-## ⚙️ Configuration
-
-The published configuration file can be found at:
-
-```
-config/installer.php
-```
-
-This allows you to customize checks and paths, such as setting the SQL dump path for import during installation.
-
----
-
-## 📥 Purchase Code Validation
-
-If your system requires purchase code validation, you can customize the validation logic in the `validatePurchaseCode` function. Here’s an example:
-
-```php
-if (!$this->validatePurchaseCode($code)) {
-    throw new Exception('Invalid purchase code.');
-}
-```
-
----
-
-## 📷 Screenshots
-
-| **Welcome Screen**         | **Database Setup**           | **Purchase Code Validation** |
-|----------------------------|------------------------------|------------------------------|
-| ![Welcome](path_to_screenshot) | ![DB Setup](path_to_screenshot) | ![Purchase Code](path_to_screenshot) |
 
 ---
 
 ## 🔧 System Requirements
 
-To ensure the Laravel Installer works as expected, your environment must meet the following requirements:
-
+### **Minimum Requirements**
 - **PHP**: 8.0 or higher
 - **Laravel**: 9.0 or higher
-- **PHP Extensions**:
-  - `mbstring`
-  - `openssl`
-  - `pdo`
-  - `tokenizer`
-  - `xml`
-  - `ctype`
-  - `json`
+- **Memory**: 128MB minimum, 512MB recommended
+- **Disk Space**: 50MB for package files
+
+### **Required PHP Extensions**
+- `mbstring` - String manipulation
+- `openssl` - Encryption and security
+- `pdo` - Database connectivity
+- `tokenizer` - Code parsing
+- `xml` - XML processing
+- `ctype` - Character type checking
+- `json` - JSON processing
+- `curl` - HTTP requests (for Envato API)
+
+### **Optional Extensions**
+- `redis` - For Redis queue/cache support
+- `opcache` - For performance optimization
+- `zip` - For backup compression
 
 ---
-## Force Publishing 
+
+## 🚀 **Release Information**
+
+### **Version**: v2.0.0
+### **Release Date**: December 19, 2024
+### **Status**: Production Ready
+### **Breaking Changes**: Yes (major version upgrade)
+
+### **Migration from v1.x**
 ```bash
-php artisan vendor:publish --tag=laravelinstaller --force
+# Backup your current installation
+cp -r vendor/jmrashed/laravel-installer vendor/jmrashed/laravel-installer-backup
+
+# Update to v2.0.0
+composer update jmrashed/laravel-installer
+
+# Republish configuration
+php artisan vendor:publish --tag=installer-config --force
 ```
+
+---
+
 ## 🤝 Contributing
 
-Contributions are welcome! If you want to contribute:
+Contributions are welcome! Please follow these steps:
 
-1. Fork the repository.
-2. Create a new feature branch: `git checkout -b feature-branch`.
-3. Commit your changes: `git commit -m 'Add new feature'`.
-4. Push to the branch: `git push origin feature-branch`.
-5. Open a pull request on GitHub.
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
 
 ---
 
 ## 📝 License
 
-This package is licensed under the [MIT license](LICENSE.md).
+This package is licensed under the [MIT License](LICENSE.md).
 
 ---
 
 ## 📬 Support
 
-For support, feel free to open an issue on the [GitHub repository](https://github.com/jmrashed/laravel-installer/issues) or contact us directly.
- 
+- **GitHub Issues**: [Report bugs and request features](https://github.com/jmrashed/laravel-installer/issues)
+- **Documentation**: [Full documentation](https://github.com/jmrashed/laravel-installer/wiki)
+- **Email Support**: Contact us directly for enterprise support
+
+---
+
+## Author
+
+**Md Rasheduzzaman**  
+Full-Stack Software Engineer & Technical Project Manager  
+
+Building scalable, secure & AI-powered SaaS platforms across ERP, HRMS, CRM, LMS, and E-commerce domains.  
+Over 10 years of experience leading full-stack teams, cloud infrastructure, and enterprise-grade software delivery.
+
+**🌐 Portfolio:** [jmrashed.github.io](https://jmrashed.github.io/)  
+**✉️ Email:** [jmrashed@gmail.com](mailto:jmrashed@gmail.com)  
+**💼 LinkedIn:** [linkedin.com/in/jmrashed](https://www.linkedin.com/in/jmrashed/)  
+**📝 Blog:** [medium.com/@jmrashed](https://medium.com/@jmrashed)  
+**💻 GitHub:** [github.com/jmrashed](https://github.com/jmrashed)
+
+---
+
+> *“Need a Reliable Software Partner? I build scalable, secure & modern solutions for startups and enterprises.”*
