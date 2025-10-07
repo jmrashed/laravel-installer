@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'install', 'as' => 'LaravelInstaller::', 'namespace' => 'Jmrashed\LaravelInstaller\Controllers', 'middleware' => ['web', 'install', 'security', 'performance', 'progress', 'dependency']], function () {
+Route::group(['prefix' => 'install', 'as' => 'LaravelInstaller::', 'namespace' => 'Jmrashed\LaravelInstaller\Controllers', 'middleware' => ['web', 'install']], function () {
 
     Route::get('/', [
         'as' => 'welcome',

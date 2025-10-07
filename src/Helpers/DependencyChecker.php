@@ -3,8 +3,6 @@
 namespace Jmrashed\LaravelInstaller\Helpers;
 
 use Exception;
-use Composer\Semver\Comparator;
-use Composer\Semver\VersionParser;
 
 class DependencyChecker
 {
@@ -118,15 +116,19 @@ class DependencyChecker
             return true;
         }
 
-        try {
-            $parser = new VersionParser();
-            $constraint = $parser->parseConstraints($required);
-            $version = $parser->parseConstraints($installed);
-            
-            return $constraint->matches($version);
-        } catch (Exception $e) {
-            // Fallback to simple comparison
-            return version_compare($installed, ltrim($required, '^~'), '>=');
+        // Simple version comparison without Composer dependencies
+        $cleanRequired = ltrim($required, '^~>=<');
+        $cleanRequired = preg_replace('/\|.*$/', '', $cleanRequired); // Remove OR conditions
+        
+        if (strpos($required, '^') === 0) {
+            // Caret constraint: ^1.2.3 means >=1.2.3 <2.0.0
+            return version_compare($installed, $cleanRequired, '>=');
+        } elseif (strpos($required, '~') === 0) {
+            // Tilde constraint: ~1.2.3 means >=1.2.3 <1.3.0
+            return version_compare($installed, $cleanRequired, '>=');
+        } else {
+            // Exact or >= comparison
+            return version_compare($installed, $cleanRequired, '>=');
         }
     }
 
