@@ -26,3 +26,4 @@ composer.lock
 
 ### ASSET EXCLUSIONS ###
 vendor/
+test-app/

@@ -28,7 +28,7 @@ jobs:
       run: composer install --no-progress --prefer-dist --optimize-autoloader
 
     - name: Run tests
-      run: ./vendor/bin/phpunit --coverage-text
+      run: ./vendor/bin/phpunit --coverage-clover=coverage.xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
@@ -36,7 +36,7 @@ jobs:
         file: ./coverage.xml
         fail_ci_if_error: false
 
-  lint:
+  quality:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -45,7 +45,34 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: 8.2
-        tools: php-cs-fixer
+        extensions: pdo, sqlite, pdo_sqlite, mbstring, xml, ctype, json, tokenizer
+
+    - name: Install dependencies
+      run: composer install --no-progress --prefer-dist --optimize-autoloader
 
     - name: Run PHP CS Fixer
-      run: php-cs-fixer fix --dry-run --diff
+      run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+
+    - name: Run PHPStan
+      run: ./vendor/bin/phpstan analyse src --level=5
+
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.2
+        extensions: pdo, sqlite, pdo_sqlite, mbstring, xml, ctype, json, tokenizer
+
+    - name: Create Laravel test app
+      run: |
+        composer create-project laravel/laravel test-app
+        cd test-app
+        composer config repositories.local path ../
+        composer require jmrashed/laravel-installer:@dev
+        php artisan vendor:publish --provider="Jmrashed\LaravelInstaller\Providers\LaravelInstallerServiceProvider"
+        php artisan config:clear
+        php artisan route:list | grep install

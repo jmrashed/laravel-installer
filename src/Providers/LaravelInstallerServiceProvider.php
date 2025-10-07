@@ -25,6 +25,8 @@ class LaravelInstallerServiceProvider extends ServiceProvider
     {
         $this->publishFiles();
         $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
+        $this->loadViewsFrom(__DIR__.'/../Views', 'installer');
+        $this->loadTranslationsFrom(__DIR__.'/../Lang', 'installer');
     }
 
     /**
@@ -36,6 +38,8 @@ class LaravelInstallerServiceProvider extends ServiceProvider
     {
         $router->middlewareGroup('install', [CanInstall::class]);
         $router->middlewareGroup('update', [CanUpdate::class]);
+        
+        $this->publishFiles();
     }
 
     /**
