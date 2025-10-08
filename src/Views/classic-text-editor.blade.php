@@ -14,7 +14,7 @@
             </h1>
             <form method="post" action="{{ route('LaravelInstaller::environmentSaveClassic') }}">
                 {!! csrf_field() !!}
-                <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4">
+                <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4"  style="background: #ffffffc4; padding: 15px;">
                     <div class="content-wrapper w-full">
                         <div class="card w-full rounded-md space-y-4 mb-4">
                             <textarea

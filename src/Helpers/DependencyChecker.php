@@ -51,13 +51,21 @@ class DependencyChecker
         $installedVersion = null;
         $compatible = false;
 
-        if (isset($installed[$package])) {
+        // Handle PHP specially
+        if ($package === 'php') {
+            $installedVersion = PHP_VERSION;
+            $status = 'installed';
+            $compatible = self::isVersionCompatible($installedVersion, $requiredVersion);
+            $status = $compatible ? 'compatible' : 'incompatible';
+        } elseif (isset($installed[$package])) {
             $installedVersion = $installed[$package]['version'];
             $status = 'installed';
             
             try {
                 $compatible = self::isVersionCompatible($installedVersion, $requiredVersion);
-                if (!$compatible) {
+                if ($compatible) {
+                    $status = 'compatible';
+                } else {
                     $status = 'incompatible';
                 }
             } catch (Exception $e) {
@@ -116,19 +124,50 @@ class DependencyChecker
             return true;
         }
 
-        // Simple version comparison without Composer dependencies
-        $cleanRequired = ltrim($required, '^~>=<');
-        $cleanRequired = preg_replace('/\|.*$/', '', $cleanRequired); // Remove OR conditions
+        // Clean version strings
+        $cleanInstalled = ltrim($installed, 'v');
         
-        if (strpos($required, '^') === 0) {
-            // Caret constraint: ^1.2.3 means >=1.2.3 <2.0.0
-            return version_compare($installed, $cleanRequired, '>=');
-        } elseif (strpos($required, '~') === 0) {
+        // Handle OR conditions (e.g., ^9.0|^10.0|^11.0)
+        if (strpos($required, '|') !== false) {
+            $constraints = explode('|', $required);
+            foreach ($constraints as $constraint) {
+                if (self::checkSingleConstraint($cleanInstalled, trim($constraint))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        return self::checkSingleConstraint($cleanInstalled, $required);
+    }
+    
+    private static function checkSingleConstraint($installed, $constraint)
+    {
+        // Handle dev versions (e.g., 2.x-dev should match ^2.0)
+        if (strpos($installed, '-dev') !== false) {
+            $devVersion = str_replace(['.x-dev', '-dev'], '', $installed);
+            $installed = $devVersion . '.999'; // Treat as high version in that branch
+        }
+        
+        $cleanConstraint = ltrim($constraint, '^~>=<');
+        
+        if (strpos($constraint, '^') === 0) {
+            // Caret constraint: ^2.0 means >=2.0.0 <3.0.0
+            $parts = explode('.', $cleanConstraint);
+            $majorVersion = $parts[0];
+            $nextMajor = ($majorVersion + 1) . '.0.0';
+            
+            return version_compare($installed, $cleanConstraint, '>=') && 
+                   version_compare($installed, $nextMajor, '<');
+        } elseif (strpos($constraint, '~') === 0) {
             // Tilde constraint: ~1.2.3 means >=1.2.3 <1.3.0
-            return version_compare($installed, $cleanRequired, '>=');
+            return version_compare($installed, $cleanConstraint, '>=');
+        } elseif (strpos($constraint, '>=') === 0) {
+            // >= constraint
+            return version_compare($installed, $cleanConstraint, '>=');
         } else {
-            // Exact or >= comparison
-            return version_compare($installed, $cleanRequired, '>=');
+            // Exact comparison
+            return version_compare($installed, $cleanConstraint, '>=');
         }
     }
 
@@ -166,7 +205,9 @@ class DependencyChecker
                     'critical' => true
                 ];
             } else {
-                $results[] = self::checkPackage($package, $version, $installed);
+                $result = self::checkPackage($package, $version, $installed);
+                $result['critical'] = true;
+                $results[] = $result;
             }
         }
 

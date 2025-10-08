@@ -14,7 +14,7 @@
             </h1>
             <form action="{{ route('LaravelInstaller::validate-purchase') }}" id="" method="POST">
                 @csrf
-                <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4">
+                <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4"  style="background: #ffffffc4; padding: 15px;">
                     <div class="content-wrapper w-full">
                         <h4 class="text-lg no-underline bg-primary text-white font-medium text-start px-6 py-3 mb-6 rounded-[4px] w-full mt-2">
                             {{ trans('installer_messages.purchaseValidation.message') }}

@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.7] - 2024-12-19 - **HOTFIX RELEASE**
+
+### 🐛 **BUG FIXES**
+- ✅ Fixed version compatibility logic for OR constraints (e.g., `^9.0|^10.0|^11.0`)
+- ✅ Fixed PHP package handling in dependency checker
+- ✅ Fixed dev version compatibility (e.g., `2.x-dev` now matches `^2.10.1`)
+- ✅ Fixed dependencies auto-check on page load
+- ✅ Added semi-transparent background to sidebar (`#ffffff66`)
+
+### 🔧 **IMPROVEMENTS**
+- ✅ Enhanced dependency checker with proper constraint parsing
+- ✅ Improved error handling for dependency validation
+- ✅ Better visual feedback for dependency status
+- ✅ Auto-execution of dependency checks on page load
+- ✅ Detailed dependency information display (required vs installed versions)
+
+### 📱 **UI ENHANCEMENTS**
+- ✅ Added background overlay to installation sidebar
+- ✅ Improved dependency status indicators with icons
+- ✅ Better error messages for failed dependency checks
+- ✅ Enhanced visual hierarchy in dependency display
+
 ## [v2.0.0] - 2024-12-19 - **PRODUCTION RELEASE**
 
 ### 🚀 **MAJOR RELEASE - COMPLETE REWRITE**

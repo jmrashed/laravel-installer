@@ -12,7 +12,7 @@
             <h1 class="capitalize text-primary border-b-[2px] border-[var(--primary)] pl-20 py-5 text-2xl font-semibold mb-4">
                 {{ env('APP_NAME') }}
             </h1>
-            <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4">
+            <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4"  style="background: #ffffffc4; padding: 15px;">
                 <div class="content-wrapper w-full">
                     @foreach($requirements['requirements'] as $type => $requirement)
                         <ul class="listing flex flex-col gap-2 mt-4 px-2">

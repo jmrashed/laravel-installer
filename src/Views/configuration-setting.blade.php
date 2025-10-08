@@ -16,7 +16,7 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="tab" value="configuration">
 
-                <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4">
+                <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4"  style="background: #ffffffc4; padding: 15px;">
                     <div class="content-wrapper w-full">
                         @include('vendor.installer._inc.environment-nav')
 

@@ -1,4 +1,4 @@
-<aside class="sidebar max-w-[500px] min-w-[420px] h-screen flex flex-col items-end justify-center border-r-[2px] border-[var(--primary)] pr-20">
+<aside class="sidebar max-w-[500px] min-w-[420px] h-screen flex flex-col items-end justify-center border-r-[2px] border-[var(--primary)] pr-20" style="background: #ffffff66;">
     <h2 class="title text-5xl font-bold text-theme mb-14">{{ trans('installer_messages.menus.title') }}</h2>
     <ul class="flex flex-col gap-[2rem]">
         <!-- Step 1: Purchase Validation -->
@@ -141,4 +141,4 @@
             </div>
         </li>
     </ul>
-</aside>de>
+</aside>
