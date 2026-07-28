@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.9] - 2026-07-28 - **LARAVEL 12 COMPATIBILITY**
+
+### 🐛 **BUG FIXES**
+- Added Laravel 12 support (`illuminate/console`, `illuminate/http`, `illuminate/support` now accept `^12.0`; `orchestra/testbench` dev dependency now accepts `^10.0`). `composer create-project laravel/laravel` has defaulted to Laravel 12 since its release, so `composer require jmrashed/laravel-installer` into any new Laravel app was failing to resolve entirely until this fix — this affected every new install, not just CI
+- Added `laravel: 12.*` to the CI test matrix (excluding `php: 8.1` + `laravel: 12.*`, since Laravel 12 requires PHP ^8.2), and fixed the CI integration job, which creates a real `laravel/laravel` project and installs this package into it — it had been failing since Laravel 12's release
+
 ## [v2.0.8] - 2026-07-28 - **SECURITY & STABILITY RELEASE**
 
 ### 🔐 **SECURITY FIXES**

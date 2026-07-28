@@ -1,14 +1,14 @@
-# Laravel Installer v2.0.8
+# Laravel Installer v2.0.9
 
 [![Latest Stable Version](https://poser.pugx.org/jmrashed/laravel-installer/v/stable)](https://packagist.org/packages/jmrashed/laravel-installer) [![Total Downloads](https://poser.pugx.org/jmrashed/laravel-installer/downloads)](https://packagist.org/packages/jmrashed/laravel-installer) [![Monthly Downloads](https://poser.pugx.org/jmrashed/laravel-installer/d/monthly)](https://packagist.org/packages/jmrashed/laravel-installer) [![License](https://poser.pugx.org/jmrashed/laravel-installer/license)](https://packagist.org/packages/jmrashed/laravel-installer) [![Stars](https://img.shields.io/github/stars/jmrashed/laravel-installer.svg?style=social&label=Stars)](https://github.com/jmrashed/laravel-installer) [![Forks](https://img.shields.io/github/forks/jmrashed/laravel-installer.svg?style=social&label=Forks)](https://github.com/jmrashed/laravel-installer)
 
-**Laravel Installer v2.0.8** is a complete enterprise-grade package designed to simplify and secure the installation process for Laravel projects. This installer features advanced security, performance monitoring, database backup/recovery, and a comprehensive 9-step installation process.
+**Laravel Installer v2.0.9** is a complete enterprise-grade package designed to simplify and secure the installation process for Laravel projects. This installer features advanced security, performance monitoring, database backup/recovery, and a comprehensive 9-step installation process.
 
 ---
 
-## 🚀 **What's New in v2.0.8**
+## 🚀 **What's New in v2.0.9**
 
-**v2.0.8 is a security & stability release.** The v2.0.0 security/performance/progress/dependency middleware described below is now actually registered and active on every installer route (previously implemented but not wired in) — see [CHANGELOG.md](CHANGELOG.md) for the full list of fixes, including a command-injection fix in the dependency installer and a permanent license-validation bypass fix.
+**v2.0.9 adds Laravel 12 support** (`composer require jmrashed/laravel-installer` was failing to resolve into any new Laravel 12 app before this fix). It builds on **v2.0.8**, a security & stability release: the v2.0.0 security/performance/progress/dependency middleware described below is now actually registered and active on every installer route (previously implemented but not wired in) — see [CHANGELOG.md](CHANGELOG.md) for the full list of fixes, including a command-injection fix in the dependency installer and a permanent license-validation bypass fix.
 
 ## 🚀 **What's New in v2.0.0**
 
@@ -343,12 +343,12 @@ src/
 
 ## 🚀 **Release Information**
 
-### **Version**: v2.0.8
+### **Version**: v2.0.9
 ### **Release Date**: 2026-07-28
 ### **Status**: Production Ready
 ### **Breaking Changes**: No (security/bug-fix release, see [CHANGELOG.md](CHANGELOG.md))
 
-### **Upgrading to v2.0.8**
+### **Upgrading to v2.0.9**
 ```bash
 # Backup your current installation
 cp -r vendor/jmrashed/laravel-installer vendor/jmrashed/laravel-installer-backup
@@ -362,7 +362,7 @@ php artisan vendor:publish --tag=installer-config --force
 ```
 
 If you were relying on the v2.0.x security/performance/progress/dependency
-middleware being present-but-inactive, note that as of v2.0.8 they are
+middleware being present-but-inactive, note that as of v2.0.9 they are
 registered on every installer route by default — see
 [CHANGELOG.md](CHANGELOG.md) for details before upgrading a
 publicly-reachable deployment.
