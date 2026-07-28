@@ -146,6 +146,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Installer/Updater Access Restriction
+    |--------------------------------------------------------------------------
+    | The only default gate on the install wizard is the storage/installed
+    | lock file, which doesn't exist until installation is complete - so
+    | anyone who reaches the app before then can run the wizard. Both
+    | settings below are optional (empty/null = no restriction, the
+    | historical default) and can be combined; set either to close that
+    | window down to trusted operators only.
+    |
+    */
+    'security' => [
+        'allowed_ips' => array_values(array_filter(explode(',', (string) env('INSTALLER_ALLOWED_IPS', '')))),
+        'access_token' => env('INSTALLER_ACCESS_TOKEN'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Purchase Code Validation (Envato Marketplace)
     |--------------------------------------------------------------------------
     | Disabled by default: most installs of this package are not sold

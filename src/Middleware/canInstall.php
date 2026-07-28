@@ -3,6 +3,7 @@
 namespace Jmrashed\LaravelInstaller\Middleware;
 
 use Closure;
+use Jmrashed\LaravelInstaller\Helpers\SecurityHelper;
 
 class canInstall
 {
@@ -15,6 +16,10 @@ class canInstall
      */
     public function handle($request, Closure $next)
     {
+        if (! SecurityHelper::isInstallerAccessAllowed($request)) {
+            abort(403, 'Installer access is restricted.');
+        }
+
         if ($this->alreadyInstalled()) {
             $installedRedirect = config('installer.installedAlreadyAction');
 

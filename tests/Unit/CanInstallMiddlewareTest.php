@@ -120,4 +120,50 @@ class CanInstallMiddlewareTest extends TestCase
 
         $this->assertFalse($middleware->alreadyInstalled());
     }
+
+    public function test_access_token_restriction_blocks_request_without_token()
+    {
+        config(['installer.security.access_token' => 'secret-token']);
+
+        $middleware = new canInstall();
+        $request = Request::create('/install');
+
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+
+        $middleware->handle($request, function ($req) {
+            return response('should-not-be-called');
+        });
+    }
+
+    public function test_access_token_restriction_allows_request_with_valid_token()
+    {
+        config(['installer.security.access_token' => 'secret-token']);
+
+        $middleware = new canInstall();
+        $request = Request::create('/install?installer_token=secret-token');
+
+        $called = false;
+        $response = $middleware->handle($request, function ($req) use (&$called) {
+            $called = true;
+
+            return response('next-called');
+        });
+
+        $this->assertTrue($called);
+        $this->assertSame('next-called', $response->getContent());
+    }
+
+    public function test_ip_allowlist_restriction_blocks_request_from_other_ip()
+    {
+        config(['installer.security.allowed_ips' => ['203.0.113.5']]);
+
+        $middleware = new canInstall();
+        $request = Request::create('/install', 'GET', [], [], [], ['REMOTE_ADDR' => '198.51.100.9']);
+
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+
+        $middleware->handle($request, function ($req) {
+            return response('should-not-be-called');
+        });
+    }
 }

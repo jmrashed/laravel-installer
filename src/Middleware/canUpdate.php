@@ -3,6 +3,7 @@
 namespace Jmrashed\LaravelInstaller\Middleware;
 
 use Closure;
+use Jmrashed\LaravelInstaller\Helpers\SecurityHelper;
 
 class canUpdate
 {
@@ -17,6 +18,10 @@ class canUpdate
      */
     public function handle($request, Closure $next)
     {
+        if (! SecurityHelper::isInstallerAccessAllowed($request)) {
+            abort(403, 'Updater access is restricted.');
+        }
+
         $updateEnabled = filter_var(config('installer.updaterEnabled'), FILTER_VALIDATE_BOOLEAN);
         switch ($updateEnabled) {
             case true:
