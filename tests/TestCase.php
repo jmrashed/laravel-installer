@@ -13,6 +13,7 @@ abstract class TestCase extends BaseTestCase
         
         $this->artisan('config:clear');
         $this->artisan('view:clear');
+        $this->artisan('route:clear');
     }
 
     protected function getPackageProviders($app)
@@ -24,6 +25,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function getEnvironmentSetUp($app)
     {
+        $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
             'driver' => 'sqlite',
