@@ -28,3 +28,5 @@ composer.lock
 vendor/
 test-app/
 node_modules/
+.phpunit.result.cache
+checklist.md
