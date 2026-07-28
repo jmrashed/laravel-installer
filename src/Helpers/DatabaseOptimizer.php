@@ -69,21 +69,30 @@ class DatabaseOptimizer
     {
         // Increase memory limit for large operations
         $currentLimit = ini_get('memory_limit');
-        $newLimit = self::calculateOptimalMemoryLimit();
-        
-        if ($newLimit > self::parseMemoryLimit($currentLimit)) {
-            ini_set('memory_limit', $newLimit);
+        $currentBytes = self::parseMemoryLimit($currentLimit);
+        $newLimit = self::calculateOptimalMemoryLimit($currentBytes);
+
+        if ($newLimit !== null && $newLimit > $currentBytes) {
+            ini_set('memory_limit', self::formatMemoryLimit($newLimit));
             LogManager::logOperation('memory_limit_increased', [
                 'from' => $currentLimit,
-                'to' => $newLimit
+                'to' => self::formatMemoryLimit($newLimit)
             ]);
         }
 
-        // Set optimal execution time
-        set_time_limit(300); // 5 minutes
-        
-        // Configure PDO for memory efficiency
-        DB::getPdo()->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+        // set_time_limit() has no effect under the CLI SAPI (max_execution_time
+        // defaults to 0/unlimited there) and can be overridden by pool config
+        // under PHP-FPM; only worth attempting outside CLI.
+        if (PHP_SAPI !== 'cli') {
+            set_time_limit(300); // 5 minutes
+        }
+
+        // MYSQL_ATTR_USE_BUFFERED_QUERY is a MySQL-specific PDO attribute;
+        // setting it unconditionally throws/warns on other drivers (Postgres,
+        // SQLite), both of which this package advertises support for.
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::getPdo()->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+        }
     }
 
     private static function getPendingMigrations()
@@ -92,21 +101,23 @@ class DatabaseOptimizer
         return glob(database_path('migrations/*.php'));
     }
 
-    private static function calculateOptimalMemoryLimit()
+    /**
+     * Recommend a higher memory_limit based on the *configured* limit, not
+     * the current process's own memory_get_usage() (which only reflects
+     * what this process has already allocated, not what's actually
+     * available on the system, and would make the "80% of available"
+     * calculation meaningless).
+     *
+     * @return int|null Byte count to raise the limit to, or null if the
+     *                   current limit is already unlimited (-1).
+     */
+    private static function calculateOptimalMemoryLimit($currentBytes)
     {
-        $available = self::getAvailableMemory();
-        $recommended = max(256 * 1024 * 1024, $available * 0.8); // 256MB or 80% of available
-        
-        return self::formatMemoryLimit($recommended);
-    }
-
-    private static function getAvailableMemory()
-    {
-        if (function_exists('memory_get_usage')) {
-            return memory_get_usage(true);
+        if ($currentBytes < 0) {
+            return null; // already unlimited
         }
-        
-        return 128 * 1024 * 1024; // Default 128MB
+
+        return max(256 * 1024 * 1024, $currentBytes * 2);
     }
 
     private static function parseMemoryLimit($limit)

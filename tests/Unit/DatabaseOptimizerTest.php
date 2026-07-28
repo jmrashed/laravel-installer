@@ -63,24 +63,22 @@ class DatabaseOptimizerTest extends TestCase
         $this->assertEquals('512K', $method->invoke(null, 512 * 1024));
     }
 
-    public function test_calculate_optimal_memory_limit_returns_formatted_string()
+    public function test_calculate_optimal_memory_limit_doubles_the_configured_limit()
     {
         $method = $this->getPrivateMethod('calculateOptimalMemoryLimit');
 
-        $result = $method->invoke(null);
+        $result = $method->invoke(null, 128 * 1024 * 1024);
 
-        $this->assertIsString($result);
-        $this->assertMatchesRegularExpression('/^\d+[GMK]$/', $result);
+        $this->assertSame(256 * 1024 * 1024, $result);
     }
 
-    public function test_get_available_memory_returns_int()
+    public function test_calculate_optimal_memory_limit_returns_null_when_already_unlimited()
     {
-        $method = $this->getPrivateMethod('getAvailableMemory');
+        $method = $this->getPrivateMethod('calculateOptimalMemoryLimit');
 
-        $result = $method->invoke(null);
+        $result = $method->invoke(null, -1);
 
-        $this->assertIsInt($result);
-        $this->assertGreaterThan(0, $result);
+        $this->assertNull($result);
     }
 
     private function getPrivateMethod($name)
