@@ -29,6 +29,15 @@ class LaravelInstallerServiceProvider extends ServiceProvider
     public function register()
     {
         $this->publishFiles();
+        $this->mergeConfigFrom(__DIR__.'/../Config/installer.php', 'installer');
+        $this->mergeConfigFrom(__DIR__.'/../Config/audit.php', 'audit');
+
+        $loggingChannels = require __DIR__.'/../Config/logging.php';
+        foreach ($loggingChannels['channels'] ?? [] as $channel => $channelConfig) {
+            if (! $this->app['config']->has("logging.channels.{$channel}")) {
+                $this->app['config']->set("logging.channels.{$channel}", $channelConfig);
+            }
+        }
 
         // Register commands
         if ($this->app->runningInConsole()) {
