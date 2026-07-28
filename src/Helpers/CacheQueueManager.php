@@ -87,7 +87,8 @@ class CacheQueueManager
     public static function optimizeApplication()
     {
         $results = [];
-        
+        $originalApp = app();
+
         $optimizeCommands = [
             'config:cache' => 'Cache configuration',
             'route:cache' => 'Cache routes',
@@ -103,13 +104,20 @@ class CacheQueueManager
             }
         }
 
+        // route:cache and config:cache boot a throwaway Application instance and point
+        // the container/Facade globals at it without restoring them, which corrupts
+        // routing/config resolution for the rest of the process (relevant for
+        // Octane/long-running workers, and for tests running the whole suite in one process).
+        \Illuminate\Container\Container::setInstance($originalApp);
+        \Illuminate\Support\Facades\Facade::setFacadeApplication($originalApp);
+
         return $results;
     }
 
     private static function updateEnvFile($updates)
     {
         $envPath = base_path('.env');
-        $envContent = File::get($envPath);
+        $envContent = File::exists($envPath) ? File::get($envPath) : '';
 
         foreach ($updates as $key => $value) {
             $pattern = "/^{$key}=.*/m";
