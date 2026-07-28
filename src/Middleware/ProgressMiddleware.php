@@ -15,9 +15,9 @@ class ProgressMiddleware
         'LaravelInstaller::dependencies' => 'dependencies',
         'LaravelInstaller::environment-setting' => 'environment',
         'LaravelInstaller::database-setting' => 'database',
-        'LaravelInstaller::database-backup' => 'backup',
-        'LaravelInstaller::cache-queue' => 'cache_queue',
-        'LaravelInstaller::performance-dashboard' => 'performance',
+        'LaravelInstaller::database-backup' => 'migration',
+        'LaravelInstaller::cache-queue' => 'optimization',
+        'LaravelInstaller::performance-dashboard' => 'optimization',
         'LaravelInstaller::installation-finished' => 'finished'
     ];
 
