@@ -45,15 +45,15 @@ class InstallationFlowTest extends TestCase
 
     public function testInstallationBlockedWhenAlreadyInstalled()
     {
-        // Create installed file
         file_put_contents(storage_path('installed'), '');
 
-        $response = $this->get('/install');
-        $response->assertStatus(404);
-
-        // Clean up
-        if (file_exists(storage_path('installed'))) {
-            unlink(storage_path('installed'));
+        try {
+            $response = $this->get('/install');
+            $response->assertStatus(404);
+        } finally {
+            if (file_exists(storage_path('installed'))) {
+                unlink(storage_path('installed'));
+            }
         }
     }
 }
