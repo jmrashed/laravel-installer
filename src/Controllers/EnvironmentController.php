@@ -9,13 +9,13 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\RateLimiter;
 use Jmrashed\LaravelInstaller\Events\EnvironmentSaved;
 use Jmrashed\LaravelInstaller\Helpers\EnvironmentManager;
 use Jmrashed\LaravelInstaller\Helpers\LogManager;
 use Jmrashed\LaravelInstaller\Helpers\DatabaseBackupManager;
 use Jmrashed\LaravelInstaller\Helpers\ProgressTracker;
 use Jmrashed\LaravelInstaller\Helpers\PerformanceMonitor;
+use Jmrashed\LaravelInstaller\Helpers\SecurityHelper;
 use Jmrashed\LaravelInstaller\Exceptions\InstallerExceptionHandler;
 use Validator;
 use Carbon\Carbon;
@@ -36,40 +36,6 @@ class EnvironmentController extends Controller
     }
 
     /**
-     * Display the Environment menu page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function environmentMenu()
-    {
-        return view('vendor.installer.environment');
-    }
-
-    /**
-     * Display the Environment page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function environmentWizard()
-    {
-        $envConfig = $this->EnvironmentManager->getEnvContent();
-
-        return view('vendor.installer.environment-wizard', compact('envConfig'));
-    }
-
-    /**
-     * Display the Environment page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function environmentClassic()
-    {
-        $envConfig = $this->EnvironmentManager->getEnvContent();
-
-        return view('vendor.installer.environment-classic', compact('envConfig'));
-    }
-
-    /**
      * Processes the newly saved environment configuration (Classic).
      *
      * @param  Request  $input
@@ -82,15 +48,11 @@ class EnvironmentController extends Controller
         
         try {
             // Rate limiting
-            if (RateLimiter::tooManyAttempts('env-save:' . request()->ip(), 5)) {
+            $retryAfter = SecurityHelper::checkRateLimit('env-save:' . request()->ip(), 5, 1);
+            if ($retryAfter) {
                 $this->logAudit('environment_save_rate_limited', ['ip' => request()->ip()]);
                 return $redirect->back()->withErrors(['rate_limit' => 'Too many attempts. Please try again later.']);
             }
-            RateLimiter::hit('env-save:' . request()->ip());
-
-            // Input sanitization
-            $sanitizedInput = $this->sanitizeInput($input->get('envConfig'));
-            $input->merge(['envConfig' => $sanitizedInput]);
 
             // Create backup before saving
             $this->createEnvBackup();
@@ -130,11 +92,11 @@ class EnvironmentController extends Controller
         
         try {
             // Rate limiting
-            if (RateLimiter::tooManyAttempts('env-wizard:' . request()->ip(), 10)) {
+            $retryAfter = SecurityHelper::checkRateLimit('env-wizard:' . request()->ip(), 10, 1);
+            if ($retryAfter) {
                 $this->logAudit('environment_wizard_rate_limited', ['ip' => request()->ip(), 'tab' => $request->tab]);
                 return $redirect->back()->withErrors(['rate_limit' => 'Too many attempts. Please try again later.']);
             }
-            RateLimiter::hit('env-wizard:' . request()->ip());
 
             // Get validation rules
             $rules = $this->getValidationRules($request->tab);
@@ -298,14 +260,6 @@ class EnvironmentController extends Controller
         ];
 
         return $redirect->route($routes[$tab])->with(['results' => $results]);
-    }
-
-    /**
-     * Sanitize input to prevent XSS and injection attacks
-     */
-    private function sanitizeInput($input)
-    {
-        return htmlspecialchars(strip_tags($input), ENT_QUOTES, 'UTF-8');
     }
 
     /**

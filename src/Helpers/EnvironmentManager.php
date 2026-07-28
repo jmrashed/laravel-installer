@@ -145,8 +145,10 @@ class EnvironmentManager
                 throw new Exception('No valid updates found for tab: ' . $request->tab);
             }
 
-            // Sanitize values
-            $updates = SecurityHelper::sanitizeInput($updates);
+            // Strip newlines/control characters to prevent env-line injection
+            $updates = array_map(function ($value) {
+                return preg_replace('/[\r\n\x00]/', '', $value);
+            }, $updates);
 
             // Create backup before making changes
             BackupManager::createEnvBackup();
