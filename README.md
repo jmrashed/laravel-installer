@@ -1,10 +1,14 @@
-# Laravel Installer v2.0.0
+# Laravel Installer v2.0.8
 
 [![Latest Stable Version](https://poser.pugx.org/jmrashed/laravel-installer/v/stable)](https://packagist.org/packages/jmrashed/laravel-installer) [![Total Downloads](https://poser.pugx.org/jmrashed/laravel-installer/downloads)](https://packagist.org/packages/jmrashed/laravel-installer) [![Monthly Downloads](https://poser.pugx.org/jmrashed/laravel-installer/d/monthly)](https://packagist.org/packages/jmrashed/laravel-installer) [![License](https://poser.pugx.org/jmrashed/laravel-installer/license)](https://packagist.org/packages/jmrashed/laravel-installer) [![Stars](https://img.shields.io/github/stars/jmrashed/laravel-installer.svg?style=social&label=Stars)](https://github.com/jmrashed/laravel-installer) [![Forks](https://img.shields.io/github/forks/jmrashed/laravel-installer.svg?style=social&label=Forks)](https://github.com/jmrashed/laravel-installer)
 
-**Laravel Installer v2.0.0** is a complete enterprise-grade package designed to simplify and secure the installation process for Laravel projects. This installer features advanced security, performance monitoring, database backup/recovery, and a comprehensive 9-step installation process.
+**Laravel Installer v2.0.8** is a complete enterprise-grade package designed to simplify and secure the installation process for Laravel projects. This installer features advanced security, performance monitoring, database backup/recovery, and a comprehensive 9-step installation process.
 
 ---
+
+## 🚀 **What's New in v2.0.8**
+
+**v2.0.8 is a security & stability release.** The v2.0.0 security/performance/progress/dependency middleware described below is now actually registered and active on every installer route (previously implemented but not wired in) — see [CHANGELOG.md](CHANGELOG.md) for the full list of fixes, including a command-injection fix in the dependency installer and a permanent license-validation bypass fix.
 
 ## 🚀 **What's New in v2.0.0**
 
@@ -72,7 +76,7 @@
 - ✅ **Database Backup/Recovery** - Automated backup with rollback capability
 - ✅ **Cache & Queue Setup** - Redis, database, sync queue configuration
 - ✅ **Progress Tracking** - Resumable installation with state persistence
-- ✅ **Multi-language Support** - 18+ languages supported
+- ✅ **Multi-language Support** - English translations are complete; 18 additional locales are scaffolded with partial coverage (contributions welcome, see [CONTRIBUTING.md](CONTRIBUTING.md))
 - ✅ **API Endpoints** - RESTful APIs for all installation operations
 
 ---
@@ -315,7 +319,7 @@ src/
 ## 🔧 System Requirements
 
 ### **Minimum Requirements**
-- **PHP**: 8.0 or higher
+- **PHP**: 8.1 or higher
 - **Laravel**: 9.0 or higher
 - **Memory**: 128MB minimum, 512MB recommended
 - **Disk Space**: 50MB for package files
@@ -339,22 +343,29 @@ src/
 
 ## 🚀 **Release Information**
 
-### **Version**: v2.0.0
-### **Release Date**: December 19, 2024
+### **Version**: v2.0.8
+### **Release Date**: 2026-07-28
 ### **Status**: Production Ready
-### **Breaking Changes**: Yes (major version upgrade)
+### **Breaking Changes**: No (security/bug-fix release, see [CHANGELOG.md](CHANGELOG.md))
 
-### **Migration from v1.x**
+### **Upgrading to v2.0.8**
 ```bash
 # Backup your current installation
 cp -r vendor/jmrashed/laravel-installer vendor/jmrashed/laravel-installer-backup
 
-# Update to v2.0.0
+# Update the package
 composer update jmrashed/laravel-installer
 
-# Republish configuration
+# Republish configuration (adds the new installer.security.* and
+# installer.purchase_validation.* config keys)
 php artisan vendor:publish --tag=installer-config --force
 ```
+
+If you were relying on the v2.0.x security/performance/progress/dependency
+middleware being present-but-inactive, note that as of v2.0.8 they are
+registered on every installer route by default — see
+[CHANGELOG.md](CHANGELOG.md) for details before upgrading a
+publicly-reachable deployment.
 
 ---
 

@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.8] - 2026-07-28 - **SECURITY & STABILITY RELEASE**
+
+### 🔐 **SECURITY FIXES**
+- 🚨 **Critical**: Fixed a command-injection vulnerability in the dependency installer — `DependencyController::installPackage()` now validates the package name against a strict allow-list pattern and shells out via an argument-array `Process` instead of an interpolated shell string
+- 🚨 **Critical**: Registered the 5 v2.0 middleware (`SecurityMiddleware`, `PerformanceMiddleware`, `ProgressMiddleware`, `DependencyMiddleware`, `ExceptionHandlerMiddleware`) on the `install`/`update` route groups — they were fully implemented but never wired into the service provider, so the advertised rate limiting, security headers, suspicious-content filtering, and audit logging were **not actually active** in any v2.0.x release before this one
+- 🚨 **Critical**: `PurchaseController::validatePurchase()` no longer unconditionally bypasses license validation — it returned before running any of its own logic, so a purchase code was never actually checked. Now gated by `installer.purchase_validation.enabled` (defaults to `false`, preserving prior default behavior for consumers who don't sell through Envato; real validation runs when enabled)
+- **High**: Added an optional IP allow-list / shared access-token gate for the entire install/update flow (`installer.security.allowed_ips`, `installer.security.access_token`) — previously the only gate was a `storage/installed` lock file that doesn't exist until installation is complete, leaving every route (including database migrate/rollback and dependency-install) reachable by anyone who got there first
+- **High**: Sanitized `.env` writes in `CacheQueueManager::updateEnvFile()` to strip control characters, closing an env-line-injection path for the Redis queue-setup form (`EnvironmentManager` already had this protection; `CacheQueueManager` didn't)
+- **High**: `DatabaseBackupManager::restoreBackup()` now validates the backup identifier format before building a filesystem path from it
+- **Medium**: `mysqldump`/`mysql`/`pg_dump`/`psql` now receive database credentials via `MYSQL_PWD`/`PGPASSWORD` environment variables instead of a `--password=` CLI flag, so they're no longer visible in `ps aux` for the life of the process
+- **Medium**: Backup directories/files are now created with `0700`/`0600` permissions instead of world-readable defaults
+- **Medium**: Implemented the previously-declared-but-unused `audit.sensitive_fields` redaction in `LogManager` — passwords/secrets are now stripped before any operation is written to the audit log
+- **Medium**: Fixed `EnvironmentController::checkDatabaseConnection()` mutating the application's ambient `config('database')` state during a connection test, which could leak the installer's test credentials into the rest of the request lifecycle
+
+### 🐛 **BUG FIXES**
+- Fixed `layouts/master.blade.php` referencing nonexistent route names (`LaravelInstaller::environment`/`LaravelInstaller::requirements`), which threw a `RouteNotFoundException` whenever an error page (or the resume-installation page) tried to render
+- Fixed missing `createPostgresBackup`/`restorePostgresBackup` implementations — the driver switch in `DatabaseBackupManager` referenced them, but they didn't exist, so any PostgreSQL install would fatally error on backup
+- Fixed `DatabaseOptimizer::optimizeMemoryUsage()` — memory-limit recommendations were based on the current process's own memory usage rather than the configured `memory_limit`, and a MySQL-only PDO attribute was being set unconditionally on all drivers (would warn/fail on PostgreSQL/SQLite, both advertised as supported)
+- Fixed a broken `Dockerfile`/`docker-compose.yml`/`package.json` chain: `docker-compose.yml` mounted a nonexistent `docker/nginx/default.conf`, `Dockerfile` ran `npm run build` against a `package.json` with no `build` script, and the asset paths in `package.json` pointed at the wrong directory — `docker-compose up` and a from-scratch `npm run build` both failed before this release
+
+### 🧹 **CLEANUP**
+- Removed dead ad-hoc scripts `test-installer.php` / `test-package.php` from the repo root (not wired into CI, and `test-package.php` referenced a controller class that no longer exists)
+- Removed ~190KB of orphaned pre-Tailwind `sass/`/`scss/` source trees, an unreferenced `style-prev.css`, and unused CSS source maps — none of it was reachable from the actual Tailwind build script or any view
+
+### 📚 **DOCUMENTATION**
+- Added `CODE_OF_CONDUCT.md` (referenced by `CONTRIBUTING.md` since it was written, but never existed)
+- Rewrote `SECURITY.md`, which was an unmodified template: a fake supported-versions table (5.x/4.x for a package that has never shipped past 2.0.x) and a `security@example.com` placeholder contact
+- Fixed the README license link (pointed at `LICENSE.md`; the file is `LICENSE`)
+- Corrected the README's minimum PHP requirement (8.0 → 8.1, matching `composer.json`) and softened the "18+ languages supported" claim to reflect that most locales are partial
+
+### ⚠️ **Known issues carried into this release**
+- 14 of 19 non-English locale files remain incomplete (English is complete); see `CONTRIBUTING.md` if you'd like to help translate
+- Long-running install operations (database migration, backup, dependency install) still run synchronously within the request instead of being queued — acceptable for typical installer usage, but can be slow against large databases
+
 ## [v2.0.7] - 2024-12-19 - **HOTFIX RELEASE**
 
 ### 🐛 **BUG FIXES**

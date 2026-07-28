@@ -1,6 +1,6 @@
 {
   "name": "laravel-installer",
-  "version": "1.0.0",
+  "version": "2.0.8",
   "description": "[![Latest Stable Version](https://poser.pugx.org/jmrashed/laravel-installer/v/stable)](https://packagist.org/packages/jmrashed/laravel-installer) [![Total Downloads](https://poser.pugx.org/jmrashed/laravel-installer/downloads)](https://packagist.org/packages/jmrashed/laravel-installer) [![Monthly Downloads](https://poser.pugx.org/jmrashed/laravel-installer/d/monthly)](https://packagist.org/packages/jmrashed/laravel-installer) [![License](https://poser.pugx.org/jmrashed/laravel-installer/license)](https://packagist.org/packages/jmrashed/laravel-installer) [![Stars](https://img.shields.io/github/stars/jmrashed/laravel-installer.svg?style=social&label=Stars)](https://github.com/jmrashed/laravel-installer) [![Forks](https://img.shields.io/github/forks/jmrashed/laravel-installer.svg?style=social&label=Forks)](https://github.com/jmrashed/laravel-installer)",
   "main": "index.js",
   "scripts": {
@@ -8,8 +8,8 @@
     "build": "npx tailwindcss -i src/assets/css/development.css -o src/assets/css/style.css && npx tailwindcss -i src/assets/css/development.css -o src/assets/css/style.min.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Rashed Zaman",
+  "license": "MIT",
   "keywords": [],
   "devDependencies": {
     "autoprefixer": "^10.4.20",
