@@ -185,29 +185,27 @@ class EnvironmentController extends Controller
             return false;
         }
 
+        // Test through a throwaway, uniquely named connection instead of
+        // overwriting config('database'), which would otherwise clobber the
+        // host application's real connections for the rest of the request.
+        $testConnectionName = 'installer_test_connection';
+
         config([
-            'database' => [
-                'default' => $connection,
-                'connections' => [
-                    $connection => array_merge($settings, [
-                        'driver' => $connection,
-                        'host' => $request->input('database_hostname'),
-                        'port' => $request->input('database_port'),
-                        'database' => $request->input('database_name'),
-                        'username' => $request->input('database_username'),
-                        'password' => $request->input('database_password'),
-                        'options' => [
-                            \PDO::ATTR_TIMEOUT => 5, // 5 second timeout
-                        ],
-                    ]),
+            "database.connections.{$testConnectionName}" => array_merge($settings, [
+                'driver' => $connection,
+                'host' => $request->input('database_hostname'),
+                'port' => $request->input('database_port'),
+                'database' => $request->input('database_name'),
+                'username' => $request->input('database_username'),
+                'password' => $request->input('database_password'),
+                'options' => [
+                    \PDO::ATTR_TIMEOUT => 5, // 5 second timeout
                 ],
-            ],
+            ]),
         ]);
 
-        DB::purge();
-
         try {
-            $pdo = DB::connection()->getPdo();
+            $pdo = DB::connection($testConnectionName)->getPdo();
             // Test with a simple query
             $pdo->query('SELECT 1');
             return true;
@@ -217,6 +215,9 @@ class EnvironmentController extends Controller
                 'database' => $request->input('database_name')
             ]);
             return false;
+        } finally {
+            DB::purge($testConnectionName);
+            config(["database.connections.{$testConnectionName}" => null]);
         }
     }
 
