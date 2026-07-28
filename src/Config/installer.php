@@ -144,4 +144,21 @@ return [
     */
     'updaterEnabled' => 'true',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Purchase Code Validation (Envato Marketplace)
+    |--------------------------------------------------------------------------
+    | Disabled by default: most installs of this package are not sold
+    | through Envato and have no local token broker running. Consumers
+    | shipping a licensed product should enable this and point the two
+    | URLs at their own token-broker/Envato-API setup.
+    |
+    */
+    'purchase_validation' => [
+        'enabled' => env('INSTALLER_PURCHASE_VALIDATION_ENABLED', false),
+        'token_url' => env('INSTALLER_ENVATO_TOKEN_URL', 'http://127.0.0.1:8089/api/get-barrier-token'),
+        'api_url' => env('INSTALLER_ENVATO_API_URL', 'https://api.envato.com/v3/market/author/sale'),
+        'verification_webhook_url' => env('INSTALLER_ENVATO_VERIFICATION_WEBHOOK_URL'),
+    ],
+
 ];

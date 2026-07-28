@@ -17,8 +17,17 @@ class PurchaseController extends Controller
      */
     public function validatePurchase(Request $request)
     {
-        return redirect('install/purchase-validation?message="valid"');
-        // Validate the incoming request
+        // Purchase validation is opt-in: most consumers of this package
+        // don't sell through Envato and have no token-broker running at
+        // installer.purchase_validation.token_url. When it's off, every
+        // install is treated as valid, same as the historical default
+        // behaviour. When it's on, the real validation below actually runs
+        // (previously this always returned early, so enabling it did
+        // nothing and no purchase code was ever checked).
+        if (! config('installer.purchase_validation.enabled', false)) {
+            return redirect('install/purchase-validation?message="valid"');
+        }
+
         $this->validateRequest($request);
 
         // Retrieve Envato access token from a local API
@@ -59,10 +68,10 @@ class PurchaseController extends Controller
      */
     private function getEnvatoAccessToken()
     {
-        $envatoApiTokenUrl = 'http://127.0.0.1:8089/api/get-barrier-token';
+        $envatoApiTokenUrl = config('installer.purchase_validation.token_url');
 
         try {
-            $tokenResponse = Http::get($envatoApiTokenUrl);
+            $tokenResponse = Http::timeout(10)->get($envatoApiTokenUrl);
             if ($tokenResponse->successful()) {
                 $tokenData = $tokenResponse->json();
                 return $tokenData['onesttech']['token'] ?? null;
@@ -83,12 +92,12 @@ class PurchaseController extends Controller
      */
     private function validatePurchaseCode(string $accessToken, string $purchaseCode)
     {
-        $envatoApiUrl = 'https://api.envato.com/v3/market/author/sale';
+        $envatoApiUrl = config('installer.purchase_validation.api_url');
 
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
-            ])->get($envatoApiUrl, [
+            ])->timeout(10)->get($envatoApiUrl, [
                 'code' => $purchaseCode,
             ]);
 
@@ -119,12 +128,14 @@ class PurchaseController extends Controller
     }
     public function storeClients($request)
     {
-        $url = 'http://127.0.0.1:8089/api/store-envato-verification-response';
+        $url = config('installer.purchase_validation.verification_webhook_url');
+
+        if (! $url) {
+            return false;
+        }
 
         try {
-            // Sending the POST request to the specified URL
-            $inputProcess = json_encode($request);
-            $response     = Http::post($url, $inputProcess);
+            $response = Http::timeout(10)->asJson()->post($url, $request);
 
             // Check if the response is successful
             if ($response->successful()) {
