@@ -51,4 +51,20 @@ class LogManagerTest extends TestCase
 
         LogManager::logSecurity('suspicious_login', ['ip' => '127.0.0.1']);
     }
+
+    public function test_log_operation_redacts_sensitive_fields()
+    {
+        Log::shouldReceive('channel')->with('installer')->once()->andReturnSelf();
+        Log::shouldReceive('info')->once()->with('queue_setup_completed', \Mockery::on(function ($context) {
+            return $context['data']['redis_password'] === '***REDACTED***'
+                && $context['data']['nested']['database_password'] === '***REDACTED***'
+                && $context['data']['driver'] === 'redis';
+        }));
+
+        LogManager::logOperation('queue_setup_completed', [
+            'driver' => 'redis',
+            'redis_password' => 'super-secret',
+            'nested' => ['database_password' => 'also-secret'],
+        ]);
+    }
 }

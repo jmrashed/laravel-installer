@@ -14,7 +14,7 @@ class LogManager
             'operation' => $operation,
             'ip' => request()->ip(),
             'session_id' => session()->getId(),
-            'data' => $data
+            'data' => self::redact($data)
         ];
 
         Log::channel('installer')->{$level}($operation, $context);
@@ -27,7 +27,7 @@ class LogManager
             'ip' => request()->ip(),
             'url' => request()->fullUrl(),
             'method' => request()->method()
-        ], $context);
+        ], self::redact($context));
 
         if ($exception) {
             $errorContext['exception'] = [
@@ -48,9 +48,36 @@ class LogManager
             'event' => $event,
             'ip' => request()->ip(),
             'user_agent' => request()->userAgent(),
-            'data' => $data
+            'data' => self::redact($data)
         ];
 
         Log::channel('security')->warning($event, $securityContext);
+    }
+
+    /**
+     * Recursively redact sensitive_fields (config('audit.sensitive_fields'))
+     * from a log data array so passwords/secrets never reach the log files,
+     * regardless of which helper happened to pass them through.
+     */
+    private static function redact($data)
+    {
+        if (!is_array($data)) {
+            return $data;
+        }
+
+        $sensitiveFields = array_map('strtolower', config('audit.sensitive_fields', []));
+
+        $redacted = [];
+        foreach ($data as $key => $value) {
+            if (is_string($key) && in_array(strtolower($key), $sensitiveFields, true)) {
+                $redacted[$key] = '***REDACTED***';
+            } elseif (is_array($value)) {
+                $redacted[$key] = self::redact($value);
+            } else {
+                $redacted[$key] = $value;
+            }
+        }
+
+        return $redacted;
     }
 }
