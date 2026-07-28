@@ -8,7 +8,7 @@ class CacheQueueControllerTest extends TestCase
 {
     public function test_clear_caches_succeeds()
     {
-        $response = $this->postJson('/installer/cache/clear');
+        $response = $this->postJson('/install/api/cache/clear');
         
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -20,7 +20,7 @@ class CacheQueueControllerTest extends TestCase
 
     public function test_setup_queues_with_sync_driver()
     {
-        $response = $this->postJson('/installer/queue/setup', [
+        $response = $this->postJson('/install/api/queue/setup', [
             'queue_driver' => 'sync'
         ]);
         
@@ -30,7 +30,7 @@ class CacheQueueControllerTest extends TestCase
 
     public function test_setup_queues_with_redis_driver()
     {
-        $response = $this->postJson('/installer/queue/setup', [
+        $response = $this->postJson('/install/api/queue/setup', [
             'queue_driver' => 'redis',
             'redis_host' => '127.0.0.1',
             'redis_port' => 6379
@@ -42,7 +42,7 @@ class CacheQueueControllerTest extends TestCase
 
     public function test_setup_scheduler_creates_config()
     {
-        $response = $this->postJson('/installer/scheduler/setup');
+        $response = $this->postJson('/install/api/scheduler/setup');
         
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -54,7 +54,7 @@ class CacheQueueControllerTest extends TestCase
 
     public function test_optimize_application()
     {
-        $response = $this->postJson('/installer/cache/optimize');
+        $response = $this->postJson('/install/api/cache/optimize');
         
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -66,7 +66,7 @@ class CacheQueueControllerTest extends TestCase
 
     public function test_cache_queue_page_loads()
     {
-        $response = $this->get('/installer/cache-queue');
+        $response = $this->get('/install/cache-queue');
         
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.cache-queue');

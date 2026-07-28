@@ -108,6 +108,16 @@ Route::group(['prefix' => 'install', 'as' => 'LaravelInstaller::', 'namespace' =
         'uses' => 'ProgressController@updateProgress',
     ]);
 
+    Route::post('/api/progress/reset', [
+        'as' => 'api.progress.reset',
+        'uses' => 'ProgressController@reset',
+    ]);
+
+    Route::get('/api/progress/can-resume', [
+        'as' => 'api.progress.can-resume',
+        'uses' => 'ProgressController@canResume',
+    ]);
+
     Route::get('/api/dependencies/check', [
         'as' => 'api.dependencies.check',
         'uses' => 'DependencyController@check',
@@ -151,6 +161,21 @@ Route::group(['prefix' => 'install', 'as' => 'LaravelInstaller::', 'namespace' =
     Route::post('/api/performance/optimize', [
         'as' => 'performance.optimize',
         'uses' => 'PerformanceController@optimize',
+    ]);
+
+    Route::get('/api/database/backup-status', [
+        'as' => 'api.database.backup-status',
+        'uses' => 'DatabaseController@checkBackup',
+    ]);
+
+    Route::get('/api/performance/history', [
+        'as' => 'api.performance.history',
+        'uses' => 'PerformanceController@getHistory',
+    ]);
+
+    Route::post('/api/cache/optimize', [
+        'as' => 'api.cache.optimize',
+        'uses' => 'CacheQueueController@optimize',
     ]);
 });
 

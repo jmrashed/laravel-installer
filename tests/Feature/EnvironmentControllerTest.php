@@ -10,7 +10,7 @@ class EnvironmentControllerTest extends TestCase
 {
     public function test_save_classic_with_valid_input()
     {
-        $response = $this->post('/installer/environment/classic', [
+        $response = $this->post('/install/environment/saveClassic', [
             'envConfig' => 'APP_NAME="Test App"'
         ]);
         
@@ -28,7 +28,7 @@ class EnvironmentControllerTest extends TestCase
             'app_url' => 'http://localhost'
         ];
         
-        $response = $this->post('/installer/environment/wizard', $data);
+        $response = $this->post('/install/environment/saveWizard', $data);
         
         $response->assertRedirect();
     }
@@ -38,10 +38,10 @@ class EnvironmentControllerTest extends TestCase
         RateLimiter::clear('env-save:127.0.0.1');
         
         for ($i = 0; $i < 6; $i++) {
-            $this->post('/installer/environment/classic', ['envConfig' => 'APP_NAME=Test']);
+            $this->post('/install/environment/saveClassic', ['envConfig' => 'APP_NAME=Test']);
         }
         
-        $response = $this->post('/installer/environment/classic', ['envConfig' => 'APP_NAME=Test']);
+        $response = $this->post('/install/environment/saveClassic', ['envConfig' => 'APP_NAME=Test']);
         $response->assertSessionHasErrors(['rate_limit']);
     }
 }

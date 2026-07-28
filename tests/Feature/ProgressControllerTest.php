@@ -9,7 +9,7 @@ class ProgressControllerTest extends TestCase
 {
     public function test_get_progress_returns_current_state()
     {
-        $response = $this->getJson('/installer/progress');
+        $response = $this->getJson('/install/api/progress');
         
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -22,7 +22,7 @@ class ProgressControllerTest extends TestCase
 
     public function test_update_progress_sets_step_status()
     {
-        $response = $this->postJson('/installer/progress/update', [
+        $response = $this->postJson('/install/api/progress/update', [
             'step' => 'environment',
             'status' => 'completed',
             'data' => ['test' => 'value']
@@ -34,7 +34,7 @@ class ProgressControllerTest extends TestCase
 
     public function test_can_resume_validates_step_access()
     {
-        $response = $this->getJson('/installer/progress/can-resume?step=database');
+        $response = $this->getJson('/install/api/progress/can-resume?step=database');
         
         $response->assertStatus(200);
         $response->assertJsonStructure(['can_resume']);
@@ -42,12 +42,12 @@ class ProgressControllerTest extends TestCase
 
     public function test_reset_clears_progress()
     {
-        $this->postJson('/installer/progress/update', [
+        $this->postJson('/install/api/progress/update', [
             'step' => 'environment',
             'status' => 'completed'
         ]);
         
-        $response = $this->postJson('/installer/progress/reset');
+        $response = $this->postJson('/install/api/progress/reset');
         
         $response->assertStatus(200);
         $response->assertJson(['success' => true]);

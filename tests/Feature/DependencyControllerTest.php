@@ -8,7 +8,7 @@ class DependencyControllerTest extends TestCase
 {
     public function test_dependency_check_returns_status()
     {
-        $response = $this->getJson('/installer/dependencies/check');
+        $response = $this->getJson('/install/api/dependencies/check');
         
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -21,7 +21,7 @@ class DependencyControllerTest extends TestCase
 
     public function test_dependency_page_loads()
     {
-        $response = $this->get('/installer/dependencies');
+        $response = $this->get('/install/dependencies');
         
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.dependencies');
@@ -29,7 +29,7 @@ class DependencyControllerTest extends TestCase
 
     public function test_install_packages_with_valid_input()
     {
-        $response = $this->postJson('/installer/dependencies/install', [
+        $response = $this->postJson('/install/api/dependencies/install', [
             'packages' => ['laravel/framework']
         ]);
         
@@ -43,7 +43,7 @@ class DependencyControllerTest extends TestCase
 
     public function test_install_fails_with_empty_packages()
     {
-        $response = $this->postJson('/installer/dependencies/install', [
+        $response = $this->postJson('/install/api/dependencies/install', [
             'packages' => []
         ]);
         

@@ -56,7 +56,6 @@ class LaravelInstallerServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
         $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
-        $this->loadRoutesFrom(__DIR__.'/../Routes/backup.php');
         $this->loadViewsFrom(__DIR__.'/../Views', 'installer');
         $this->loadTranslationsFrom(__DIR__.'/../Lang', 'installer');
 

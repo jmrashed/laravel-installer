@@ -9,7 +9,7 @@ class PerformanceControllerTest extends TestCase
 {
     public function test_get_metrics_returns_performance_data()
     {
-        $response = $this->getJson('/installer/performance/metrics');
+        $response = $this->getJson('/install/api/performance/metrics');
         
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -28,7 +28,7 @@ class PerformanceControllerTest extends TestCase
             ['operation' => 'test', 'execution_time' => 0.1, 'memory_used' => 1024]
         ], 3600);
         
-        $response = $this->getJson('/installer/performance/history?hours=1');
+        $response = $this->getJson('/install/api/performance/history?hours=1');
         
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -39,7 +39,7 @@ class PerformanceControllerTest extends TestCase
 
     public function test_optimize_performance()
     {
-        $response = $this->postJson('/installer/performance/optimize');
+        $response = $this->postJson('/install/api/performance/optimize');
         
         $response->assertStatus(200);
         $response->assertJsonStructure([

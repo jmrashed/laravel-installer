@@ -14,6 +14,7 @@ abstract class TestCase extends BaseTestCase
         $this->artisan('config:clear');
         $this->artisan('view:clear');
         $this->artisan('route:clear');
+        $this->artisan('vendor:publish', ['--tag' => 'laravelinstaller', '--force' => true]);
     }
 
     protected function getPackageProviders($app)

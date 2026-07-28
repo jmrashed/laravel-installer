@@ -9,7 +9,7 @@ class DatabaseControllerTest extends TestCase
 {
     public function test_migrate_creates_backup_and_runs_migration()
     {
-        $response = $this->postJson('/installer/database/migrate', [
+        $response = $this->postJson('/install/api/database/migrate', [
             'seed' => false,
             'batch_size' => 10
         ]);
@@ -27,7 +27,7 @@ class DatabaseControllerTest extends TestCase
     {
         Cache::put('installer_backup_id', 'test_backup_123', 3600);
         
-        $response = $this->postJson('/installer/database/rollback');
+        $response = $this->postJson('/install/api/database/rollback');
         
         $response->assertStatus(200);
         $response->assertJson(['success' => true]);
@@ -37,7 +37,7 @@ class DatabaseControllerTest extends TestCase
     {
         Cache::put('installer_backup_id', 'test_backup_123', 3600);
         
-        $response = $this->getJson('/installer/database/backup-status');
+        $response = $this->getJson('/install/api/database/backup-status');
         
         $response->assertStatus(200);
         $response->assertJson([
