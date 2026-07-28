@@ -42,8 +42,12 @@ class DatabaseBackupManager
 
     public static function restoreBackup($backupId)
     {
+        if (!preg_match('/^backup_\d+_[a-f0-9]+$/', (string) $backupId)) {
+            throw new Exception('Invalid backup identifier');
+        }
+
         $backupPath = storage_path("installer/backups/{$backupId}.sql");
-        
+
         if (!file_exists($backupPath)) {
             throw new Exception("Backup file not found: {$backupId}");
         }
@@ -71,20 +75,43 @@ class DatabaseBackupManager
     private static function createMysqlBackup($config, $backupPath, $backupId)
     {
         $command = sprintf(
-            'mysqldump --host=%s --port=%s --user=%s --password=%s %s > %s',
+            'mysqldump --host=%s --port=%s --user=%s %s > %s',
             escapeshellarg($config['host']),
             escapeshellarg($config['port'] ?? 3306),
             escapeshellarg($config['username']),
-            escapeshellarg($config['password']),
             escapeshellarg($config['database']),
             escapeshellarg($backupPath)
         );
 
-        exec($command, $output, $returnCode);
-        
+        $returnCode = self::runWithMysqlPassword($config['password'] ?? '', $command);
+
         if ($returnCode !== 0) {
             throw new Exception('MySQL backup failed');
         }
+
+        self::lockDownBackupFile($backupPath);
+
+        return $backupId;
+    }
+
+    private static function createPostgresBackup($config, $backupPath, $backupId)
+    {
+        $command = sprintf(
+            'pg_dump --host=%s --port=%s --username=%s --no-password %s > %s',
+            escapeshellarg($config['host']),
+            escapeshellarg($config['port'] ?? 5432),
+            escapeshellarg($config['username']),
+            escapeshellarg($config['database']),
+            escapeshellarg($backupPath)
+        );
+
+        $returnCode = self::runWithPostgresPassword($config['password'] ?? '', $command);
+
+        if ($returnCode !== 0) {
+            throw new Exception('PostgreSQL backup failed');
+        }
+
+        self::lockDownBackupFile($backupPath);
 
         return $backupId;
     }
@@ -92,7 +119,7 @@ class DatabaseBackupManager
     private static function createSqliteBackup($config, $backupPath, $backupId)
     {
         $dbPath = $config['database'];
-        
+
         if (!file_exists($dbPath)) {
             throw new Exception('SQLite database file not found');
         }
@@ -101,25 +128,46 @@ class DatabaseBackupManager
             throw new Exception('Failed to copy SQLite database');
         }
 
+        self::lockDownBackupFile($backupPath);
+
         return $backupId;
     }
 
     private static function restoreMysqlBackup($config, $backupPath)
     {
         $command = sprintf(
-            'mysql --host=%s --port=%s --user=%s --password=%s %s < %s',
+            'mysql --host=%s --port=%s --user=%s %s < %s',
             escapeshellarg($config['host']),
             escapeshellarg($config['port'] ?? 3306),
             escapeshellarg($config['username']),
-            escapeshellarg($config['password']),
             escapeshellarg($config['database']),
             escapeshellarg($backupPath)
         );
 
-        exec($command, $output, $returnCode);
-        
+        $returnCode = self::runWithMysqlPassword($config['password'] ?? '', $command);
+
         if ($returnCode !== 0) {
             throw new Exception('MySQL restore failed');
+        }
+
+        return true;
+    }
+
+    private static function restorePostgresBackup($config, $backupPath)
+    {
+        $command = sprintf(
+            'psql --host=%s --port=%s --username=%s --no-password %s < %s',
+            escapeshellarg($config['host']),
+            escapeshellarg($config['port'] ?? 5432),
+            escapeshellarg($config['username']),
+            escapeshellarg($config['database']),
+            escapeshellarg($backupPath)
+        );
+
+        $returnCode = self::runWithPostgresPassword($config['password'] ?? '', $command);
+
+        if ($returnCode !== 0) {
+            throw new Exception('PostgreSQL restore failed');
         }
 
         return true;
@@ -128,7 +176,7 @@ class DatabaseBackupManager
     private static function restoreSqliteBackup($config, $backupPath)
     {
         $dbPath = $config['database'];
-        
+
         if (!copy($backupPath, $dbPath)) {
             throw new Exception('Failed to restore SQLite database');
         }
@@ -136,12 +184,57 @@ class DatabaseBackupManager
         return true;
     }
 
+    /**
+     * Run a mysql/mysqldump command with the password passed via MYSQL_PWD
+     * instead of a --password= CLI flag, so it isn't visible in `ps aux`.
+     */
+    private static function runWithMysqlPassword($password, $command)
+    {
+        $previous = getenv('MYSQL_PWD');
+        putenv('MYSQL_PWD=' . $password);
+
+        try {
+            exec($command, $output, $returnCode);
+        } finally {
+            putenv($previous === false ? 'MYSQL_PWD' : "MYSQL_PWD={$previous}");
+        }
+
+        return $returnCode;
+    }
+
+    /**
+     * Run a psql/pg_dump command with the password passed via PGPASSWORD
+     * instead of on the command line.
+     */
+    private static function runWithPostgresPassword($password, $command)
+    {
+        $previous = getenv('PGPASSWORD');
+        putenv('PGPASSWORD=' . $password);
+
+        try {
+            exec($command, $output, $returnCode);
+        } finally {
+            putenv($previous === false ? 'PGPASSWORD' : "PGPASSWORD={$previous}");
+        }
+
+        return $returnCode;
+    }
+
+    private static function lockDownBackupFile($backupPath)
+    {
+        if (file_exists($backupPath)) {
+            chmod($backupPath, 0600);
+        }
+    }
+
     private static function ensureBackupDirectory()
     {
         $backupDir = storage_path('installer/backups');
-        
+
         if (!is_dir($backupDir)) {
-            mkdir($backupDir, 0755, true);
+            mkdir($backupDir, 0700, true);
+        } else {
+            chmod($backupDir, 0700);
         }
     }
 

@@ -47,8 +47,10 @@ class DatabaseBackupManagerTest extends TestCase
 
     public function test_restore_sqlite_backup()
     {
-        // Create test backup file
-        $backupId = 'test_backup_' . time();
+        // Create test backup file using the real backupId format
+        // (backup_<timestamp>_<uniqid hex>), since restoreBackup() now
+        // validates the identifier shape before touching the filesystem.
+        $backupId = 'backup_' . time() . '_' . uniqid();
         $backupPath = storage_path("installer/backups/{$backupId}.sql");
         $dbPath = storage_path('test_restore.sqlite');
         
@@ -83,7 +85,15 @@ class DatabaseBackupManagerTest extends TestCase
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Backup file not found');
-        
-        DatabaseBackupManager::restoreBackup('nonexistent_backup');
+
+        DatabaseBackupManager::restoreBackup('backup_' . time() . '_' . uniqid());
+    }
+
+    public function test_restore_backup_with_invalid_identifier_throws_exception()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Invalid backup identifier');
+
+        DatabaseBackupManager::restoreBackup('../../.env');
     }
 }

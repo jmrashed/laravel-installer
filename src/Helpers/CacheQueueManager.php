@@ -119,10 +119,16 @@ class CacheQueueManager
         $envPath = base_path('.env');
         $envContent = File::exists($envPath) ? File::get($envPath) : '';
 
+        // Strip newlines/control characters to prevent env-line injection,
+        // matching EnvironmentManager::saveFileWizard().
+        $updates = array_map(function ($value) {
+            return preg_replace('/[\r\n\x00]/', '', (string) $value);
+        }, $updates);
+
         foreach ($updates as $key => $value) {
-            $pattern = "/^{$key}=.*/m";
+            $pattern = '/^' . preg_quote($key, '/') . '=.*/m';
             $replacement = "{$key}={$value}";
-            
+
             if (preg_match($pattern, $envContent)) {
                 $envContent = preg_replace($pattern, $replacement, $envContent);
             } else {
