@@ -13,7 +13,7 @@ class SecurityHelperTest extends TestCase
         $sanitized = SecurityHelper::sanitizeInput($maliciousInput);
         
         $this->assertStringNotContainsString('<script>', $sanitized);
-        $this->assertStringNotContainsString('alert', $sanitized);
+        $this->assertStringNotContainsString('<', $sanitized);
     }
 
     public function test_sanitize_input_handles_arrays()
