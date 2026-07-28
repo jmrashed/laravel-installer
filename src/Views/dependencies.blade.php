@@ -1,7 +1,7 @@
 @extends('vendor.installer.layouts.imaster')
 
 @section('template_title')
-    Dependencies Check
+    {{ trans('installer_messages.dependencies.templateTitle') }}
 @endsection
 
 @section('icontent')
@@ -15,41 +15,41 @@
             <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4"  style="background: #ffffffc4; padding: 15px;">
                 <div class="content-wrapper w-full">
                     <h4 class="text-lg no-underline bg-primary text-white font-medium text-start px-6 py-3 mb-6 rounded-[4px] w-full">
-                        Dependencies Check
+                        {{ trans('installer_messages.dependencies.title') }}
                     </h4>
-                    
+
                     @if(isset($error))
                         <div class="alert alert-danger bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                            <strong>Error:</strong> {{ $error }}
+                            <strong>{{ trans('installer_messages.dependencies.error') }}:</strong> {{ $error }}
                         </div>
                     @else
                         <div class="dependency-check">
                             <div class="card bg-white p-6 w-full rounded-md space-y-4">
-                                <h5 class="text-md font-semibold text-primary mb-4">Composer Dependencies</h5>
+                                <h5 class="text-md font-semibold text-primary mb-4">{{ trans('installer_messages.dependencies.composer_dependencies') }}</h5>
                                 <div id="dependency-results">
-                                    <div class="loading text-center py-4">Checking dependencies...</div>
+                                    <div class="loading text-center py-4">{{ trans('installer_messages.dependencies.checking_dependencies') }}</div>
                                 </div>
-                                
-                                <h5 class="text-md font-semibold text-primary mb-4 mt-6">Critical Dependencies</h5>
+
+                                <h5 class="text-md font-semibold text-primary mb-4 mt-6">{{ trans('installer_messages.dependencies.critical_dependencies') }}</h5>
                                 <div id="critical-results">
-                                    <div class="loading text-center py-4">Checking critical dependencies...</div>
+                                    <div class="loading text-center py-4">{{ trans('installer_messages.dependencies.checking_critical_dependencies') }}</div>
                                 </div>
                             </div>
                         </div>
                     @endif
                 </div>
-                
+
                 <div class="flex gap-4 items-center justify-center">
                     <a href="{{ route('LaravelInstaller::permissions') }}" class="btn-primary-outline">
                         <i class="ri-arrow-left-line"></i>
-                        Back
+                        {{ trans('installer_messages.dependencies.back') }}
                     </a>
                     <button id="check-dependencies" class="btn-primary-fill">
-                        Check Dependencies
+                        {{ trans('installer_messages.dependencies.check') }}
                         <i class="ri-refresh-line"></i>
                     </button>
                     <a href="{{ route('LaravelInstaller::configuration-setting') }}" class="btn-primary-fill" id="next-step" style="display:none;">
-                        Next
+                        {{ trans('installer_messages.dependencies.next') }}
                         <i class="ri-arrow-right-s-line"></i>
                     </a>
                 </div>

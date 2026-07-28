@@ -1,7 +1,7 @@
 @extends('vendor.installer.layouts.imaster')
 
 @section('template_title')
-    Database Migration & Backup
+    {{ trans('installer_messages.database_backup.templateTitle') }}
 @endsection
 
 @section('icontent')
@@ -15,42 +15,42 @@
             <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4"  style="background: #ffffffc4; padding: 15px;">
                 <div class="content-wrapper w-full">
                     <h4 class="text-lg no-underline bg-primary text-white font-medium text-start px-6 py-3 mb-6 rounded-[4px] w-full">
-                        Database Migration & Backup
+                        {{ trans('installer_messages.database_backup.title') }}
                     </h4>
-                    
+
                     <div class="card bg-white p-6 w-full rounded-md space-y-4">
                         <div class="backup-info">
-                            <p class="text-gray-600 mb-4">This step will create a backup of your database before running migrations to ensure data safety.</p>
+                            <p class="text-gray-600 mb-4">{{ trans('installer_messages.database_backup.description') }}</p>
                         </div>
 
                         <div class="backup-options space-y-4">
                             <div class="flex items-center">
                                 <input type="checkbox" id="create_backup" checked class="h-4 w-4 text-primary border-gray-300 focus:ring-primary cursor-pointer">
                                 <label for="create_backup" class="ml-2 block text-sm text-gray-700 cursor-pointer">
-                                    Create database backup before migration
+                                    {{ trans('installer_messages.database_backup.create_backup_label') }}
                                 </label>
                             </div>
-                            
+
                             <div class="flex items-center">
                                 <input type="checkbox" id="run_seeders" class="h-4 w-4 text-primary border-gray-300 focus:ring-primary cursor-pointer">
                                 <label for="run_seeders" class="ml-2 block text-sm text-gray-700 cursor-pointer">
-                                    Run database seeders after migration
+                                    {{ trans('installer_messages.database_backup.run_seeders_label') }}
                                 </label>
                             </div>
-                            
+
                             <div class="contact-form">
-                                <label for="batch_size" class="text-primary block text-sm font-semibold text-gray-700">Migration batch size (for large databases):</label>
+                                <label for="batch_size" class="text-primary block text-sm font-semibold text-gray-700">{{ trans('installer_messages.database_backup.batch_size_label') }}</label>
                                 <input type="number" id="batch_size" value="10" min="1" max="100" class="h-10 px-0 py-3 mt-1 block w-full border-b border-primary outline-none sm:text-sm">
                             </div>
                         </div>
 
                         <div class="migration-controls mt-6">
                             <button id="start-migration" class="btn-primary-fill w-full">
-                                Start Database Migration
+                                {{ trans('installer_messages.database_backup.start_migration') }}
                                 <i class="ri-database-2-line"></i>
                             </button>
                             <button id="rollback-migration" class="btn-primary-outline w-full mt-3" style="display:none;">
-                                Rollback Migration
+                                {{ trans('installer_messages.database_backup.rollback_migration') }}
                                 <i class="ri-arrow-go-back-line"></i>
                             </button>
                         </div>
@@ -69,10 +69,10 @@
                 <div class="flex gap-4 items-center justify-center">
                     <a href="{{ route('LaravelInstaller::database-setting') }}" class="btn-primary-outline">
                         <i class="ri-arrow-left-line"></i>
-                        Back
+                        {{ trans('installer_messages.database_backup.back') }}
                     </a>
                     <a href="{{ route('LaravelInstaller::cache-queue') }}" class="btn-primary-fill" id="next-step" style="display:none;">
-                        Next
+                        {{ trans('installer_messages.database_backup.next') }}
                         <i class="ri-arrow-right-s-line"></i>
                     </a>
                 </div>

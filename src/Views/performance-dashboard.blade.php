@@ -1,7 +1,7 @@
 @extends('vendor.installer.layouts.imaster')
 
 @section('template_title')
-    Performance Dashboard
+    {{ trans('installer_messages.performance.templateTitle') }}
 @endsection
 
 @section('icontent')
@@ -15,62 +15,62 @@
             <div class="h-[80vh] w-full flex flex-col justify-between items-center gap-10 pl-4"  style="background: #ffffffc4; padding: 15px;">
                 <div class="content-wrapper w-full">
                     <h4 class="text-lg no-underline bg-primary text-white font-medium text-start px-6 py-3 mb-6 rounded-[4px] w-full">
-                        Performance Dashboard
+                        {{ trans('installer_messages.performance.title') }}
                     </h4>
-                    
+
                     <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-6">
                         <div class="card bg-white p-6 rounded-md text-center">
-                            <h5 class="text-sm font-semibold text-gray-600 mb-2">Execution Time</h5>
+                            <h5 class="text-sm font-semibold text-gray-600 mb-2">{{ trans('installer_messages.performance.execution_time') }}</h5>
                             <div id="execution-time" class="text-2xl font-bold text-primary">--</div>
                         </div>
                         <div class="card bg-white p-6 rounded-md text-center">
-                            <h5 class="text-sm font-semibold text-gray-600 mb-2">Memory Usage</h5>
+                            <h5 class="text-sm font-semibold text-gray-600 mb-2">{{ trans('installer_messages.performance.memory_usage') }}</h5>
                             <div id="memory-usage" class="text-2xl font-bold text-primary">--</div>
                         </div>
                         <div class="card bg-white p-6 rounded-md text-center">
-                            <h5 class="text-sm font-semibold text-gray-600 mb-2">Peak Memory</h5>
+                            <h5 class="text-sm font-semibold text-gray-600 mb-2">{{ trans('installer_messages.performance.peak_memory') }}</h5>
                             <div id="peak-memory" class="text-2xl font-bold text-primary">--</div>
                         </div>
                         <div class="card bg-white p-6 rounded-md text-center">
-                            <h5 class="text-sm font-semibold text-gray-600 mb-2">Database Queries</h5>
+                            <h5 class="text-sm font-semibold text-gray-600 mb-2">{{ trans('installer_messages.performance.database_queries') }}</h5>
                             <div id="db-queries" class="text-2xl font-bold text-primary">--</div>
                         </div>
                     </div>
 
                     <div class="card bg-white p-6 rounded-md mb-6">
-                        <h5 class="text-md font-semibold text-primary mb-4">Performance History</h5>
+                        <h5 class="text-md font-semibold text-primary mb-4">{{ trans('installer_messages.performance.performance_history') }}</h5>
                         <div class="chart-container bg-gray-50 p-4 rounded">
                             <canvas id="metricsChart" width="400" height="200"></canvas>
                         </div>
                     </div>
 
                     <div class="card bg-white p-6 rounded-md">
-                        <h5 class="text-md font-semibold text-primary mb-4">Optimization Tools</h5>
+                        <h5 class="text-md font-semibold text-primary mb-4">{{ trans('installer_messages.performance.optimization_tools') }}</h5>
                         <div class="grid gap-4 grid-cols-1 md:grid-cols-3">
                             <button id="optimize-performance" class="btn-primary-fill">
                                 <i class="ri-speed-line"></i>
-                                Optimize Performance
+                                {{ trans('installer_messages.performance.optimize_performance') }}
                             </button>
                             <button id="clear-opcache" class="btn-primary-outline">
                                 <i class="ri-refresh-line"></i>
-                                Clear OPCache
+                                {{ trans('installer_messages.performance.clear_opcache') }}
                             </button>
                             <button id="garbage-collect" class="btn-primary-outline">
                                 <i class="ri-delete-bin-line"></i>
-                                Run Garbage Collection
+                                {{ trans('installer_messages.performance.run_garbage_collection') }}
                             </button>
                         </div>
                         <div id="optimization-results" class="results mt-4"></div>
                     </div>
                 </div>
-                
+
                 <div class="flex gap-4 items-center justify-center">
                     <a href="{{ route('LaravelInstaller::cache-queue') }}" class="btn-primary-outline">
                         <i class="ri-arrow-left-line"></i>
-                        Back
+                        {{ trans('installer_messages.performance.back') }}
                     </a>
                     <a href="{{ route('LaravelInstaller::installation-finished') }}" class="btn-primary-fill">
-                        Finish Installation
+                        {{ trans('installer_messages.performance.finish_installation') }}
                         <i class="ri-check-double-line"></i>
                     </a>
                 </div>
