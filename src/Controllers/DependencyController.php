@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Jmrashed\LaravelInstaller\Helpers\DependencyChecker;
 use Jmrashed\LaravelInstaller\Helpers\LogManager;
 use Jmrashed\LaravelInstaller\Helpers\ProgressTracker;
+use Symfony\Component\Process\Process;
 
 class DependencyController extends Controller
 {
@@ -120,12 +121,22 @@ class DependencyController extends Controller
 
     private function installPackage($package)
     {
-        try {
-            $command = "composer require {$package} --no-interaction 2>&1";
-            $output = shell_exec($command);
-            
+        if (!is_string($package) || !preg_match('/^[a-z0-9]([a-z0-9_.-]*[a-z0-9])?\/[a-z0-9]([a-z0-9_.-]*[a-z0-9])?(:[a-zA-Z0-9^~><=. |*-]+)?$/', $package)) {
             return [
-                'success' => strpos($output, 'Package operations:') !== false,
+                'success' => false,
+                'error' => 'Invalid package name'
+            ];
+        }
+
+        try {
+            $process = new Process(['composer', 'require', $package, '--no-interaction'], base_path());
+            $process->setTimeout(300);
+            $process->run();
+
+            $output = $process->getOutput() . $process->getErrorOutput();
+
+            return [
+                'success' => $process->isSuccessful() && strpos($output, 'Package operations:') !== false,
                 'output' => $output
             ];
         } catch (Exception $e) {
