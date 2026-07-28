@@ -24,7 +24,7 @@ class InstallerControllerTest extends TestCase
 
     public function test_server_requirements_page_loads()
     {
-        $response = $this->get('/install/server-requirements');
+        $response = $this->visitInstallerStep('/install/server-requirements');
 
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.server-requirements');
@@ -33,7 +33,7 @@ class InstallerControllerTest extends TestCase
 
     public function test_permissions_page_loads()
     {
-        $response = $this->get('/install/permissions');
+        $response = $this->visitInstallerStep('/install/permissions');
 
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.permissions');
@@ -42,7 +42,7 @@ class InstallerControllerTest extends TestCase
 
     public function test_environment_setting_page_loads()
     {
-        $response = $this->get('/install/environment-setting');
+        $response = $this->visitInstallerStep('/install/environment-setting');
 
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.environment-setting');
@@ -58,7 +58,7 @@ class InstallerControllerTest extends TestCase
 
     public function test_database_setting_page_loads()
     {
-        $response = $this->get('/install/database-setting');
+        $response = $this->visitInstallerStep('/install/database-setting');
 
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.database-setting');
@@ -108,7 +108,7 @@ class InstallerControllerTest extends TestCase
 
     public function test_installation_finished_page_loads()
     {
-        $response = $this->get('/install/installation-finished');
+        $response = $this->visitInstallerStep('/install/installation-finished');
 
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.installation-finished');
@@ -124,6 +124,7 @@ class InstallerControllerTest extends TestCase
 
     public function test_performance_dashboard_page_loads()
     {
+        $this->visitInstallerStep('/install/cache-queue');
         $response = $this->get('/install/performance-dashboard');
 
         $response->assertStatus(200);
@@ -132,7 +133,7 @@ class InstallerControllerTest extends TestCase
 
     public function test_cache_queue_page_loads()
     {
-        $response = $this->get('/install/cache-queue');
+        $response = $this->visitInstallerStep('/install/cache-queue');
 
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.cache-queue');
@@ -140,7 +141,7 @@ class InstallerControllerTest extends TestCase
 
     public function test_database_backup_page_loads()
     {
-        $response = $this->get('/install/database-backup');
+        $response = $this->visitInstallerStep('/install/database-backup');
 
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.database-backup');

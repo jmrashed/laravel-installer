@@ -66,8 +66,8 @@ class CacheQueueControllerTest extends TestCase
 
     public function test_cache_queue_page_loads()
     {
-        $response = $this->get('/install/cache-queue');
-        
+        $response = $this->visitInstallerStep('/install/cache-queue');
+
         $response->assertStatus(200);
         $response->assertViewIs('vendor.installer.cache-queue');
     }

@@ -67,8 +67,11 @@ class DependencyMiddlewareTest extends TestCase
 
     public function test_redirects_to_dependencies_page_when_critical_dependency_missing()
     {
-        // No composer.lock present in the test skeleton app, so
-        // DependencyChecker::checkCriticalDependencies() reports laravel/framework as missing.
+        // TestCase::setUp() mirrors a real composer.lock into the sandbox so
+        // DependencyMiddleware behaves realistically when wired into the app;
+        // remove it here to exercise the "missing" branch specifically.
+        unlink(base_path('composer.lock'));
+
         $middleware = new DependencyMiddleware();
         $request = $this->requestForRoute('LaravelInstaller::server-requirements');
 

@@ -59,16 +59,20 @@ class LaravelInstallerServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../Views', 'installer');
         $this->loadTranslationsFrom(__DIR__.'/../Lang', 'installer');
 
-        $router->middlewareGroup('install', [CanInstall::class]);
-        $router->middlewareGroup('update', [CanUpdate::class]);
-        
-        // Register new v2.0.0 middleware (commented out for initial setup)
-        // $router->aliasMiddleware('security', SecurityMiddleware::class);
-        // $router->aliasMiddleware('performance', PerformanceMiddleware::class);
-        // $router->aliasMiddleware('progress', ProgressMiddleware::class);
-        // $router->aliasMiddleware('dependency', DependencyMiddleware::class);
-        // $router->aliasMiddleware('exception-handler', ExceptionHandlerMiddleware::class);
-        
+        $router->middlewareGroup('install', [
+            CanInstall::class,
+            ExceptionHandlerMiddleware::class,
+            SecurityMiddleware::class,
+            PerformanceMiddleware::class,
+            DependencyMiddleware::class,
+            ProgressMiddleware::class,
+        ]);
+        $router->middlewareGroup('update', [
+            CanUpdate::class,
+            ExceptionHandlerMiddleware::class,
+            SecurityMiddleware::class,
+        ]);
+
         $this->publishFiles();
     }
 
